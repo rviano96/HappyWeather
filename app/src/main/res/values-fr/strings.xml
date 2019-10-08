@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Mon Application</string>
+    <string name="login">Se Connecter</string>
+    <string name="register">"S'inscrire"</string>
+    <string name="alreadyRegistered">"Déjà inscrit? \n Connectez-vous ici"</string>
+    <string name="notRegisteredYet">Toujours pas inscrit? Registrez-vous ici</string>
+    <string name="email">Email</string>
+    <string name="fullName">Nom Complet</string>
+    <string name="password">Mot De Passe</string>
+    <string name="registerAndLogin">"S'inscrire et se connecter"</string>
+    <string name="wellcome">Bonjour</string>
+    <string name="sendMail">Envoyer Email</string>
+    <string name="call">Telephoner</string>
+    <string name="openBrowser">Ouvrir Browser</string>
+    <string name="showUsers">Montrer Utilisateurs</string>
+    <string name="nameApp">Happy Weather</string>
+    <string name = "menuItemSettings">Reglages</string>
+    <string name = "menuItemHelp">Aide</string>
+    <string name = "menuItemLogOut">LogOut</string>
+    <string name="navigation_drow_open">Ouvrir barre de navigation</string>
+    <string name="navigation_drow_close">Fermer barre de navigation</string>
+    <!--Detalles del clima actual-->
+    <string name="humidity">Humidité \n %1$s %%</string>
+    <string name="pressure">Pression \n %1$s Hpa</string>
+    <string name="riskOfRain">Risque De Pluie \n %1$s %%</string>
+    <string name="rain">Precipitations \n %1$s cm</string>
+    <string name="apparentTemperature">Ressentie \n %1$s °</string>
+    <string name="wind">Vent \n %1$s km/h</string>
+    <string name="visibility">Visibilité \n %1$s km</string>
+    <!--EMAIL-->
+    <string name="email_subject">Quelque chose s\'est mal passé </string>
+    <string name="email_chooser">Envoyer mail avec...</string>
+</resources>

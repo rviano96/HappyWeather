@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!--LOGIN ACTIVITY-->
+    <dimen name="marginTopImageLogin">5dp</dimen>
+    <dimen name="heightImageLogin">79dp</dimen>
+
+
+    <!--REGISTER ACTIVITY-->
+    <dimen name="marginTopRegister">80dp</dimen>
+    <dimen name="heightImageRegister">79dp</dimen>
+
+    <!--Commons-->
+    <dimen name="marginTopTextView">10dp</dimen>
+    <dimen name="marginTopText">15dp</dimen>
+    <dimen name="marginLeft">60dp</dimen>
+    <dimen name="marginTopLeyend">10dp</dimen>
+    <dimen name="fab_margin">16dp</dimen>
+</resources>

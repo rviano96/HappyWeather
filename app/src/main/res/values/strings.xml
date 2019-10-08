@@ -1,0 +1,33 @@
+<resources>
+    <string name="app_name">Happy Weather</string>
+    <string name="login">Login</string>
+    <string name="register">Register</string>
+    <string name="alreadyRegistered">Already registered? \n Login here</string>
+    <string name="notRegisteredYet">"Don't have an account yet? \n Register here</string>
+    <string name="email">Email</string>
+    <string name="fullName">Full Name</string>
+    <string name="password">Password</string>
+    <string name="registerAndLogin">Register and Login</string>
+    <string name="wellcome">Hello</string>
+    <string name="sendMail">Send Email</string>
+    <string name="call">Call</string>
+    <string name="openBrowser">Open Browser</string>
+    <string name="showUsers">Show Users</string>
+    <string name="nameApp">Happy Weather</string>
+    <string name="menuItemSettings">Settings</string>
+    <string name="menuItemHelp">Help</string>
+    <string name="menuItemLogOut">LogOut</string>
+    <string name="navigation_drow_open">Open navigation drawer</string>
+    <string name="navigation_drow_close">Close navigation drawer</string>
+    <!--Detalles del clima actual-->
+    <string name="humidity">Humidity \n %1$s %%</string>
+    <string name="pressure">Pressure \n %1$s Hpa</string>
+    <string name="riskOfRain">Risk Of Rain \n %1$s %%</string>
+    <string name="rain">Rain \n %1$s cm</string>
+    <string name="apparentTemperature">Appar. Temp. \n %1$s °</string>
+    <string name="wind">Wind \n %1$s km/h</string>
+    <string name="visibility">Visibility \n %1$s km</string>
+    <!--Email-->
+    <string name="email_subject">Something went wrong</string>
+    <string name="email_chooser">Send email using...</string>
+</resources>

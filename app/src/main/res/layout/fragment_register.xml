@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="utf-8"?>
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:orientation="vertical" android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:weightSum="1"
+        android:background="@drawable/background_img"
+        >
+        <TextView
+            android:id="@+id/appName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_weight="0.09"
+            android:text="@string/nameApp"
+            android:textSize="25dp"
+            android:textStyle="bold" />
+
+    <TextView
+            android:id="@+id/loginscrn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/marginTopRegister"
+            android:text="@string/register"
+            android:textSize="25dp"
+            android:textStyle="bold"
+            android:layout_gravity="center_horizontal"
+            android:layout_weight="0.2"/>
+        <TextView
+            android:id="@+id/fstTxt"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/marginLeft"
+            android:layout_marginTop="@dimen/marginTopText"
+            android:text="@string/fullName"
+            android:layout_weight="0.085"/>
+        <EditText
+            android:id="@+id/txtName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:drawableLeft="@drawable/ic_account_circle_black_18dp"
+            android:drawableStart="@drawable/ic_account_circle_black_18dp"
+            android:inputType="textPersonName"
+            android:layout_weight="0.085"
+            android:ems="10"/>
+        <TextView
+            android:id="@+id/secTxt"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/email"
+            android:layout_weight="0.085"
+            android:layout_marginLeft="@dimen/marginLeft" />
+        <EditText
+            android:id="@+id/txtEmail"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:inputType="textEmailAddress"
+            android:drawableLeft="@drawable/ic_email_black_18dp"
+            android:drawableStart="@drawable/ic_email_black_18dp"
+            android:layout_weight="0.085"
+            android:ems="10" />
+        <TextView
+            android:id="@+id/thirdTxt"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/password"
+            android:layout_weight="0.085"
+            android:layout_marginLeft="@dimen/marginLeft" />
+        <EditText
+            android:id="@+id/txtPwd"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:inputType="textPassword"
+            android:drawableLeft="@drawable/ic_lock_black_18dp"
+            android:drawableStart="@drawable/ic_lock_black_18dp"
+            android:layout_weight="0.085"
+            android:ems="10" />
+
+        <Button
+            android:id="@+id/btnLogin"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_weight="0.085"
+            android:drawableEnd="@drawable/ic_arrow_forward_black_18dp"
+            android:drawableRight="@drawable/ic_arrow_forward_black_18dp"
+            android:onClick="register"
+            android:text="@string/registerAndLogin" />
+
+        <TextView
+            android:id="@+id/lnkLogin"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/marginTopLeyend"
+            android:layout_weight="0.2"
+            android:gravity="center"
+            android:text="@string/alreadyRegistered"
+            android:textColor="#3F51B5"
+            android:textSize="20dp" />
+    </LinearLayout>
