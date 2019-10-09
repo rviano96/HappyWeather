@@ -29,10 +29,26 @@ public class WeatherForecastListAdapter extends RecyclerView.Adapter<WeatherFore
     @Override
     public void onBindViewHolder(@NonNull WeatherForecastHolder weatherForecastHolder, int i) {
         Weather weather = weatherForecastList.get(i);
-        weatherForecastHolder.getDOW().setText(weather.getDOW());
-        weatherForecastHolder.getmaxTemp().setText(Double.toString(weather.getMaximum()));
-        weatherForecastHolder.getminTemp().setText(Double.toString(weather.getMinimum()));
-        weatherForecastHolder.geticonView().setBackgroundResource(R.drawable.ic_wb_sunny_24px);
+        weatherForecastHolder.getDOW().setText(weather.getDOW().toUpperCase());
+        weatherForecastHolder.getmaxTemp().setText(weather.getMaximum()+ "°");
+        weatherForecastHolder.getminTemp().setText(weather.getMinimum() + "°");
+        //sunny
+
+        if (weather.getWeather() == 0) {
+            weatherForecastHolder.geticonView().setBackgroundResource(R.drawable.ic_iconfinder_weather_01_1530392);
+        } else {//cloudy
+            if (weather.getWeather() == 1) {
+                weatherForecastHolder.geticonView().setBackgroundResource(R.drawable.ic_iconfinder_cloudy);
+            } else {//snowy
+                if (weather.getWeather() == 2) {
+                    weatherForecastHolder.geticonView().setBackgroundResource(R.drawable.ic_iconfinder_snowflake_1651934);
+                } else {//rainny
+                    if (weather.getWeather() == 3) {
+                        weatherForecastHolder.geticonView().setBackgroundResource(R.drawable.ic_iconfinder_rainny);
+                    }
+                }
+            }
+        }
     }
 
     @Override

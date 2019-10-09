@@ -4,28 +4,28 @@
     tools:showIn="navigation_view">
     <group android:checkableBehavior="single">
         <item android:id="@+id/nav_home"
-            android:icon="@drawable/ic_home_black_24dp"
-            android:title="Home"
+            android:icon="@drawable/ic_iconfinder_map"
+            android:title="@string/menuItemHome"
             />
         <item
             android:id="@+id/nav_weather"
-            android:icon="@drawable/ic_ac_unit_black_24dp"
-            android:title="Weather"/>
+            android:icon="@drawable/ic_iconfinder_weather"
+            android:title="@string/menuItemWeather"/>
         <item
             android:id="@+id/nav_settings"
             android:icon="@drawable/ic_settings_black_24dp"
-            android:title="Settings" />
+            android:title="@string/menuItemSettings" />
     </group>
     <item
         android:id="@+id/nav_logout"
-        android:icon="@drawable/ic_exit_to_app_black_24dp"
-        android:title="Logout" />
-    <item android:title="Something to say?">
+        android:icon="@drawable/ic_iconfinder_logout"
+        android:title="@string/menuItemLogOut" />
+    <item android:title="@string/itemHelpTitle">
         <menu>
             <item
                 android:id="@+id/nav_help"
                 android:icon="@drawable/ic_help_black_24dp"
-                android:title="Need Help" />
+                android:title="@string/menuItemHelp" />
         </menu>
     </item>
 </menu>

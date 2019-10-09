@@ -36,8 +36,6 @@ public class WeatherFragment extends Fragment {
     private TextView location;
     //actualWeather
     private TextView actualWeather;
-    //weatherIcon
-    private ImageView weatherIcon;
     //temp
     private TextView temp;
     private List<Weather> weatherForecast = new ArrayList<>();
@@ -66,7 +64,7 @@ public class WeatherFragment extends Fragment {
 
         recyclerViewWeather.setAdapter(new WeatherListAdapter(weather));
 
-        recyclerViewWeather.addItemDecoration(new DividerItemDecoration(getContext(), DividerItemDecoration.VERTICAL));
+
 
         //-------------------------------Recycler de los detalles------------------------------------------------------------------
         recyclerViewDetails = retView.findViewById(R.id.recyclerViewDetails);
@@ -80,27 +78,25 @@ public class WeatherFragment extends Fragment {
         //----------------------------------Datos Actuales--------------------------------------------------------------
         location = retView.findViewById(R.id.location);
         actualWeather = retView.findViewById(R.id.actualWeather);
-        weatherIcon = retView.findViewById(R.id.weatherIcon);
         temp = retView.findViewById(R.id.temp);
         location.setText( weather.get(0).getLocation());
-        actualWeather.setText( "sunny");
-        weatherIcon.setBackgroundResource(R.drawable.ic_iconfinder_weather_01_1530392);
-        temp.setText(Double.toString(weather.get(0).getActualTemp()));
+        actualWeather.setText(R.string.snowy);
+        temp.setText("31°");
         return  retView;
     }
 
 
     private void initWeatherForecast(){
 
-        for(int i = 0; i < 8; i++){
+        for(int i = 0; i < 7; i++){
             // Simula una semana
-            weatherForecast.add(new Weather(29.0+i,15-i,"Cordoba", new Date(new Date().getTime() + 78097230*i)));
+            weatherForecast.add(new Weather(29.0+i,15-i,"Cordoba", new Date(new Date().getTime() + 78097230*i), 1));
         }
     }
     private void initWeather(){
         //Simula tdo un dia
         for(int i = 0; i < 24; i++){
-            weather.add(new Weather(29.0+i,15-i, i,"Cordoba", new Date(new Date().getTime() + 3570947*i)));
+            weather.add(new Weather(29.0+i,15-i, i,"Cordoba", new Date(new Date().getTime() + 3570947*i), 3));
         }
     }
 

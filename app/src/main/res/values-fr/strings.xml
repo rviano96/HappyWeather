@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">Mon Application</string>
+    <string name="app_name">Happy Weather</string>
+    <string name="splash_title">Bienvenues</string>
     <string name="login">Se Connecter</string>
     <string name="register">"S'inscrire"</string>
     <string name="alreadyRegistered">"Déjà inscrit? \n Connectez-vous ici"</string>
@@ -15,6 +16,10 @@
     <string name="openBrowser">Ouvrir Browser</string>
     <string name="showUsers">Montrer Utilisateurs</string>
     <string name="nameApp">Happy Weather</string>
+    <!--DRAWER MENU-->
+    <string name="itemHelpTitle">Quelque chose à dire?</string>
+    <string name="menuItemWeather">Météo</string>
+    <string name="menuItemHome">Home</string>
     <string name = "menuItemSettings">Reglages</string>
     <string name = "menuItemHelp">Aide</string>
     <string name = "menuItemLogOut">LogOut</string>
@@ -31,4 +36,19 @@
     <!--EMAIL-->
     <string name="email_subject">Quelque chose s\'est mal passé </string>
     <string name="email_chooser">Envoyer mail avec...</string>
+    <string name ="desc">desc</string>
+    <!--DAYS OF THE WEEK-->
+    <string name="monday">Lundi</string>
+    <string name="tuesday">Mardi</string>
+    <string name="wednesday">Mercredi</string>
+    <string name="thursday">Jeudi</string>
+    <string name="friday">Vendredi</string>
+    <string name="saturday">Samedi</string>
+    <string name="sunday">Dimanche</string>
+    <!-- WEATHER -->
+    <string name="sunny">Ensoleillé</string>
+    <string name="cloudy">Nuageux</string>
+    <string name="snowy">Neige</string>
+    <string name="rainny">Pluie</string>
+    <string name="partially">Partiellement %1$s</string>
 </resources>

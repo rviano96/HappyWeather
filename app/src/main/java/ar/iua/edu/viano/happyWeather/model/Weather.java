@@ -1,7 +1,11 @@
 package ar.iua.edu.viano.happyWeather.model;
 
+import android.content.res.Resources;
+
 import java.text.SimpleDateFormat;
 import java.util.Date;
+
+import ar.iua.edu.viano.happyWeather.R;
 
 public class Weather {
     private double maximum;
@@ -11,6 +15,17 @@ public class Weather {
     private Date date;
     private double actualTemp;
     private WeatherDetails weatherDetails;
+    private int weather;
+
+
+    public int getWeather() {
+        return weather;
+    }
+
+    public void setWeather(int weather) {
+        this.weather = weather;
+    }
+
     public Weather() {
 
     }
@@ -27,26 +42,29 @@ public class Weather {
         this.date = date;
         this.actualTemp = actualTemp;
         this.weatherDetails = weatherDetails;
+
     }
 
     public void setWeatherDetails(WeatherDetails weatherDetails) {
         this.weatherDetails = weatherDetails;
     }
 
-    public Weather(double maximum, double minimum, String location, Date date) {
+    public Weather(double maximum, double minimum, String location, Date date,  int weather) {
         this.maximum = maximum;
         this.minimum = minimum;
         this.location = location;
         this.date = date;
-        this.DOW = new SimpleDateFormat("EEEEE").format(date); //obtiene el dia de la semana
+        this.DOW = new SimpleDateFormat("EEEE").format(date); //obtiene el dia de la semana
+        this.weather = weather;
     }
-    public Weather(double maximum, double minimum, double actualTemp, String location, Date date) {
+    public Weather(double maximum, double minimum, double actualTemp, String location, Date date,  int weather) {
         this.maximum = maximum;
         this.minimum = minimum;
         this.location = location;
         this.date = date;
         this.actualTemp = actualTemp;
         this.DOW = new SimpleDateFormat("EEEE").format(date); //obtiene el dia de la semana
+        this.weather = weather;
     }
     public double getMaximum() {
         return maximum;
@@ -77,7 +95,32 @@ public class Weather {
     }
 
     public void setDOW(String DOW) {
-        this.DOW = DOW;
+        switch (DOW){
+            case "Monday":
+                this.DOW = Resources.getSystem().getString(R.string.monday);
+                break;
+            case "Tuesday":
+                this.DOW = Resources.getSystem().getString(R.string.tuesday);
+                break;
+            case "Wednesday":
+                this.DOW = Resources.getSystem().getString(R.string.wednesday);
+                break;
+            case "Friday":
+                this.DOW = Resources.getSystem().getString(R.string.friday);
+                break;
+            case "Thursday":
+                this.DOW = Resources.getSystem().getString(R.string.thursday);
+                break;
+            case "Sunday":
+                this.DOW = Resources.getSystem().getString(R.string.sunday);
+                break;
+            case "Saturday":
+                this.DOW = Resources.getSystem().getString(R.string.saturday);
+                break;
+            default:
+                this.DOW = "Err";
+        }
+        //this.DOW = DOW;
     }
 
     public String getLocation() {

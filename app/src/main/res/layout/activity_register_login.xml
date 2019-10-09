@@ -4,10 +4,23 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="ar.iua.edu.viano.happyWeather.Activities.RegisterLoginActivity">
+    tools:context="ar.iua.edu.viano.happyWeather.Activities.RegisterLoginActivity"
+    android:background="@drawable/background_img"
+    android:orientation="vertical">
+    <TextView
+        android:id="@+id/appName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:text="@string/nameApp"
+        android:textSize="25dp"
+        android:layout_marginTop="20dp"
+        android:textStyle="bold"
+        />
     <FrameLayout
         android:id="@+id/fragment"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"></FrameLayout>
+        android:layout_height="wrap_content"
+        ></FrameLayout>
 
 </LinearLayout>
