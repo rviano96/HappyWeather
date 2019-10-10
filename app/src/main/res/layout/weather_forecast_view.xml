@@ -10,7 +10,7 @@
 
     <TextView
         android:id="@+id/DOW"
-        android:layout_width="150dp"
+        android:layout_width="130dp"
         android:layout_height="wrap_content"
         android:layout_marginLeft="20dp"
         android:layout_row="0"
@@ -34,7 +34,7 @@
         android:id="@+id/maxTemp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginRight="15dp"
+        android:layout_marginRight="10dp"
         android:layout_gravity="center_vertical"
         android:layout_row="0"
         android:layout_column="2"
@@ -45,7 +45,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_vertical"
-        android:layout_marginRight="15dp"
+        android:layout_marginRight="10dp"
         android:layout_row="0"
         android:layout_column="3"
         android:layout_columnWeight="1.5" />
