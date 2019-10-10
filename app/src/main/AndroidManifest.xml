@@ -11,13 +11,15 @@
         android:roundIcon="@mipmap/ic_launcher_happy_weather"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".Activities.RegisterLoginActivity" />
+        <activity android:name=".Activities.RegisterLoginActivity"
+            android:screenOrientation="portrait"/>
         <activity android:name=".Activities.HomeActivity"
+            android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar"/>
-        <activity android:name=".Activities.SplashActivity">
+        <activity android:name=".Activities.SplashActivity"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>

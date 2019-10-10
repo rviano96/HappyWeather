@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
+
 <GridLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+    android:layout_height="50dp"
     android:alignmentMode="alignBounds"
     android:columnCount="4"
     android:rowCount="1"
@@ -9,26 +10,32 @@
 
     <TextView
         android:id="@+id/DOW"
-        android:layout_width="200dp"
+        android:layout_width="150dp"
         android:layout_height="wrap_content"
+        android:layout_marginLeft="20dp"
         android:layout_row="0"
         android:layout_column="0"
-
+        android:layout_gravity="center_vertical"
         />
 
     <ImageView
         android:id="@+id/iconView"
-        android:layout_width="20dp"
-        android:layout_height="20dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_row="0"
         android:layout_column="1"
+        android:layout_marginRight="30dp"
         android:layout_columnWeight="1"
-        android:contentDescription="@string/desc" />
+        android:layout_gravity="center_vertical"
+        android:contentDescription="@string/desc"
+        />
 
     <TextView
         android:id="@+id/maxTemp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginRight="15dp"
+        android:layout_gravity="center_vertical"
         android:layout_row="0"
         android:layout_column="2"
         android:layout_columnWeight="1.5" />
@@ -37,6 +44,8 @@
         android:id="@+id/minTemp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:layout_marginRight="15dp"
         android:layout_row="0"
         android:layout_column="3"
         android:layout_columnWeight="1.5" />
@@ -44,60 +53,3 @@
 
 </GridLayout>
 
-    <!--RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        android:layout_width="match_parent" android:layout_height="wrap_content"
-
-        >
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-
-            android:weightSum="3">
-            <TextView
-                android:id="@+id/DOW"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentTop="true"
-                android:layout_weight="1"
-                />
-
-            <ImageView
-                android:id="@+id/iconView"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_toRightOf="@+id/DOW"
-
-                android:layout_gravity="center"
-
-                />
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="2"
-                android:orientation="horizontal"
-                android:layout_gravity="end"
-                android:gravity="end"
-                android:layout_marginRight="20dp"
-                >
-                <TextView
-                    android:id="@+id/maxTemp"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:gravity="center"
-                    android:layout_gravity="center"
-                    android:paddingLeft="10dp"
-                     />
-                <TextView
-                    android:id="@+id/minTemp"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:gravity="end"
-                    android:layout_gravity="end"
-                    android:paddingLeft="10dp"
-                    />
-            </LinearLayout>
-
-
-        </LinearLayout>
-
-    </RelativeLayout-->
