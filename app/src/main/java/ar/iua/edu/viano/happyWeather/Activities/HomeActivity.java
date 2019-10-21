@@ -138,7 +138,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
     private void sendMail(){
         Intent intent = new Intent(Intent.ACTION_SEND);
         intent.setType("text/plain");
-        intent.putExtra(Intent.EXTRA_EMAIL, new String[]{"rviano96@alumos.iua.edu.ar"});
+        intent.putExtra(Intent.EXTRA_EMAIL, new String[]{"rviano662@alumos.iua.edu.ar"});
         intent.putExtra(Intent.EXTRA_SUBJECT, getResources().getString(R.string.email_subject));
         Intent mailer = Intent.createChooser(intent, getResources().getString(R.string.email_chooser));
         startActivity(mailer);
