@@ -11,7 +11,7 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import ar.iua.edu.viano.happyWeather.R;
-import ar.iua.edu.viano.happyWeather.model.User;
+import ar.iua.edu.viano.happyWeather.Model.User;
 
 
 public class RegisterFragment extends Fragment {

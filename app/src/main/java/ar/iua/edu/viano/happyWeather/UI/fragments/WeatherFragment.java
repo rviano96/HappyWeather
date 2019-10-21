@@ -10,7 +10,6 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -20,9 +19,9 @@ import java.util.List;
 import ar.iua.edu.viano.happyWeather.R;
 import ar.iua.edu.viano.happyWeather.UI.recyclerView.adapters.WeatherDetailsListAdapter;
 import ar.iua.edu.viano.happyWeather.UI.recyclerView.adapters.WeatherListAdapter;
-import ar.iua.edu.viano.happyWeather.model.Weather;
+import ar.iua.edu.viano.happyWeather.Model.Weather;
 import ar.iua.edu.viano.happyWeather.UI.recyclerView.adapters.WeatherForecastListAdapter;
-import ar.iua.edu.viano.happyWeather.model.WeatherDetails;
+import ar.iua.edu.viano.happyWeather.Model.WeatherDetails;
 
 
 public class WeatherFragment extends Fragment {

@@ -1,8 +1,4 @@
-package ar.iua.edu.viano.happyWeather.model;
-
-import android.content.Context;
-
-import ar.iua.edu.viano.happyWeather.R;
+package ar.iua.edu.viano.happyWeather.Model;
 
 public class WeatherDetails {
     private String detail1;

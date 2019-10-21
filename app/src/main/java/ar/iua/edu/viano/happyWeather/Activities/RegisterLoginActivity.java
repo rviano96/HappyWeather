@@ -12,7 +12,7 @@ import ar.iua.edu.viano.happyWeather.Constants.Constants;
 import ar.iua.edu.viano.happyWeather.UI.fragments.LoginFragment;
 import ar.iua.edu.viano.happyWeather.R;
 import ar.iua.edu.viano.happyWeather.UI.fragments.RegisterFragment;
-import ar.iua.edu.viano.happyWeather.model.User;
+import ar.iua.edu.viano.happyWeather.Model.User;
 
 public class RegisterLoginActivity extends AppCompatActivity implements LoginFragment.LoginFragmentListener, RegisterFragment.RegisterFragmentListener {
     private static final String EMAIL = "EMAIL";

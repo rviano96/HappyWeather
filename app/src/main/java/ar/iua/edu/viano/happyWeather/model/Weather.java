@@ -1,4 +1,4 @@
-package ar.iua.edu.viano.happyWeather.model;
+package ar.iua.edu.viano.happyWeather.Model;
 
 import android.content.res.Resources;
 

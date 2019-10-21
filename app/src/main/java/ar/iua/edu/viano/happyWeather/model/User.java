@@ -1,4 +1,4 @@
-package ar.iua.edu.viano.happyWeather.model;
+package ar.iua.edu.viano.happyWeather.Model;
 
 import android.os.Parcel;
 import android.os.Parcelable;

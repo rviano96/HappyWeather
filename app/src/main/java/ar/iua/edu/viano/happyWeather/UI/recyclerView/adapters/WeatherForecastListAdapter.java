@@ -10,7 +10,7 @@ import java.util.List;
 
 import ar.iua.edu.viano.happyWeather.R;
 import ar.iua.edu.viano.happyWeather.UI.recyclerView.WeatherForecastHolder;
-import ar.iua.edu.viano.happyWeather.model.Weather;
+import ar.iua.edu.viano.happyWeather.Model.Weather;
 
 public class WeatherForecastListAdapter extends RecyclerView.Adapter<WeatherForecastHolder> {
     private List<Weather> weatherForecastList;

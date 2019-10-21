@@ -27,7 +27,7 @@ import ar.iua.edu.viano.happyWeather.R;
 import ar.iua.edu.viano.happyWeather.UI.fragments.MapFragment;
 import ar.iua.edu.viano.happyWeather.UI.fragments.SettingsFragment;
 import ar.iua.edu.viano.happyWeather.UI.fragments.WeatherFragment;
-import ar.iua.edu.viano.happyWeather.model.User;
+import ar.iua.edu.viano.happyWeather.Model.User;
 
 public class HomeActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, SettingsFragment.EditButtonListener {
     private User usuario;

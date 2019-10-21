@@ -1,6 +1,5 @@
 package ar.iua.edu.viano.happyWeather.UI.recyclerView.adapters;
 
-import android.content.res.Resources;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -11,7 +10,7 @@ import java.text.SimpleDateFormat;
 import java.util.List;
 
 import ar.iua.edu.viano.happyWeather.R;
-import ar.iua.edu.viano.happyWeather.model.Weather;
+import ar.iua.edu.viano.happyWeather.Model.Weather;
 import ar.iua.edu.viano.happyWeather.UI.recyclerView.WeatherHolder;
 
 public class WeatherListAdapter extends RecyclerView.Adapter<WeatherHolder> {
