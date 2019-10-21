@@ -23,6 +23,7 @@ import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import ar.iua.edu.viano.happyWeather.Preferences.PreferencesUtils;
 import ar.iua.edu.viano.happyWeather.R;
 import ar.iua.edu.viano.happyWeather.UI.fragments.MapFragment;
 import ar.iua.edu.viano.happyWeather.UI.fragments.SettingsFragment;
@@ -33,6 +34,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
     private User usuario;
     private DrawerLayout drawer;
     private String actualFragment = null;
+    private PreferencesUtils preferencesUtils;
     //referencia al fragment que vamos a abrir
     Fragment selectedFragment = null;
     NavigationView navigationView = null;
@@ -42,6 +44,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
     String currentPhotoPath;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        preferencesUtils = new PreferencesUtils(this);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
         savedInstanceState = getIntent().getExtras();
@@ -144,8 +147,9 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         startActivity(mailer);
     }
 
-    //Permite hacer logout. Por ahora solo es un codigo dummy
+    //Permite hacer logout. Por ahora solo setea a false la preferencia "is_logged_in"
     private void doLogout(){
+        preferencesUtils.setUserIsLoggedIn(false);
         Intent intent = new Intent(this, RegisterLoginActivity.class);
         startActivity(intent);
         finish();

@@ -12,6 +12,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 
+import ar.iua.edu.viano.happyWeather.Preferences.PreferencesUtils;
 import ar.iua.edu.viano.happyWeather.R;
 import ar.iua.edu.viano.happyWeather.Model.User;
 
@@ -26,13 +27,14 @@ public class SettingsFragment extends Fragment {
     private ImageButton picture;
     private Bitmap photo= null;
     private boolean editing = false;
+    private PreferencesUtils preferencesUtils;
     private EditButtonListener editButtonListener;
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
         View retView = inflater.inflate(R.layout.fragment_settings, container, false);
-        user = getArguments().getParcelable("User");//obtengo lo que viene del activity
+        //user = getArguments().getParcelable("User");//obtengo lo que viene del activity
         fullName = (EditText) retView.findViewById(R.id.txtName);
         email = (EditText) retView.findViewById(R.id.txtEmail);
         password = (EditText)retView.findViewById(R.id.txtPwd);
@@ -42,6 +44,7 @@ public class SettingsFragment extends Fragment {
         takePicture(picture);
         editEnabled(edit);
         save(save);
+        preferencesUtils = new PreferencesUtils(getActivity().getApplicationContext());
         setTexts();
         return retView;
     }
@@ -115,9 +118,9 @@ public class SettingsFragment extends Fragment {
         });
     }
     private void setTexts(){
-        fullName.setText(user.getName());
-        email.setText(user.getEmail());
-        password.setText(user.getPsw());
+        fullName.setText(preferencesUtils.getUserName());
+        email.setText(preferencesUtils.getUserEmail());
+        password.setText("genericPsw");
     }
 
 

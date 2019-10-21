@@ -9,6 +9,7 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 
+import ar.iua.edu.viano.happyWeather.Preferences.PreferencesUtils;
 import ar.iua.edu.viano.happyWeather.R;
 
 public class SplashActivity extends AppCompatActivity {
@@ -17,11 +18,13 @@ public class SplashActivity extends AppCompatActivity {
     private ImageView loading;
     //el objeto Animation de la transición de una activity hacia otra.
     private Animation transicion;
+    private PreferencesUtils preferencesUtils;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
         View decorView = getWindow().getDecorView();
+        preferencesUtils = new PreferencesUtils(this);
         //View.SYSTEM_UI_FLAG_HIDE_NAVIGATION permite ocultar el menú de navegación
         //View.SYSTEM_UI_FLAG_FULLSCREEN activa el modo fullscreen
         int uiOptions = View.SYSTEM_UI_FLAG_HIDE_NAVIGATION | View.SYSTEM_UI_FLAG_FULLSCREEN;
@@ -51,8 +54,16 @@ public class SplashActivity extends AppCompatActivity {
         });
     }
     public void siguienteActivity(){
-        animacion.stop(); //Paramos el AnimationDrawable
-        Intent intent = new Intent(this, RegisterLoginActivity.class); // Lanzamos HomeActivity
+        Intent intent = null;
+        if(!preferencesUtils.getUserIsLoggedIn()){
+            // si no esta loggeado
+            intent = new Intent(this, RegisterLoginActivity.class); // Lanzamos HomeActivity
+        }else{
+            // si esta loggeado
+            intent = new Intent(this, HomeActivity.class); // Lanzamos HomeActivity
+        }
+        //Paramos el AnimationDrawable
+        animacion.stop();
         startActivity(intent);
         finish(); //Finalizamos este activity
     }

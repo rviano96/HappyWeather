@@ -1,6 +1,7 @@
 package ar.iua.edu.viano.happyWeather.Activities;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
@@ -9,6 +10,7 @@ import android.os.Bundle;
 import android.view.View;
 
 import ar.iua.edu.viano.happyWeather.Constants.Constants;
+import ar.iua.edu.viano.happyWeather.Preferences.PreferencesUtils;
 import ar.iua.edu.viano.happyWeather.UI.fragments.LoginFragment;
 import ar.iua.edu.viano.happyWeather.R;
 import ar.iua.edu.viano.happyWeather.UI.fragments.RegisterFragment;
@@ -20,6 +22,7 @@ public class RegisterLoginActivity extends AppCompatActivity implements LoginFra
     LoginFragment fragmentLogin = new LoginFragment();
     FragmentManager fragmentManager = getSupportFragmentManager();
     FragmentTransaction fragmentTransaction;
+    private PreferencesUtils preferencesUtils;
     private int actualFragment = -1; //0 si es login, 1 si es register, -1 otherwiese
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,6 +37,7 @@ public class RegisterLoginActivity extends AppCompatActivity implements LoginFra
         actualFragment = 0;
         fragmentTransaction.add(R.id.fragment, fragmentLogin, "Login Fragment");
         fragmentTransaction.commit();
+        preferencesUtils = new PreferencesUtils(this);
     }
 
     @Override
@@ -69,6 +73,9 @@ public class RegisterLoginActivity extends AppCompatActivity implements LoginFra
 
     @Override
     public void doLogin(User user) {
+        preferencesUtils.setUserEmail(user.getEmail());
+        preferencesUtils.setUserName(user.getName());
+        preferencesUtils.setUserIsLoggedIn(true);
         Intent intent = new Intent(this, HomeActivity.class);
         intent.putExtra(Constants.USER_DATA, user);
         startActivity(intent);
