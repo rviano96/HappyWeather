@@ -9,6 +9,8 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 
+import com.amitshekhar.DebugDB;
+
 import ar.iua.edu.viano.happyWeather.Preferences.PreferencesUtils;
 import ar.iua.edu.viano.happyWeather.R;
 
@@ -36,6 +38,7 @@ public class SplashActivity extends AppCompatActivity {
         animacion.start();
         transicion = AnimationUtils.loadAnimation(this,R.anim.mitransicion);
         loading.startAnimation(transicion);
+        System.out.println("Debug BD: " + DebugDB.getAddressLog());
         transicion.setAnimationListener(new Animation.AnimationListener() {
             @Override
             public void onAnimationStart(Animation animation) {

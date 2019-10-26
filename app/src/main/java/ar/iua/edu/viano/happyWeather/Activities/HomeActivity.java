@@ -42,6 +42,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
     Bitmap photo = null;
     static final int REQUEST_TAKE_PHOTO = 0,  REQUEST_SELECT_PICTURE = 1, REQUEST_CAMERA = 2;
     String currentPhotoPath;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         preferencesUtils = new PreferencesUtils(this);
@@ -157,7 +158,11 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
 
     @Override
     public void saveEdit(User user) {
-        usuario = user;
+        //usuario = user;
+        preferencesUtils.setUserName(user.getName());
+        preferencesUtils.setUserEmail(user.getEmail());
+        //preferencesUtils.set(user.getName());
+
     }
 
     //Abre la camara para tomar una foto

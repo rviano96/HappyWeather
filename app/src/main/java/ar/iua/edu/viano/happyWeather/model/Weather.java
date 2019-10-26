@@ -1,5 +1,6 @@
 package ar.iua.edu.viano.happyWeather.Model;
 
+import android.arch.persistence.room.Ignore;
 import android.content.res.Resources;
 
 import java.text.SimpleDateFormat;
@@ -7,17 +8,21 @@ import java.util.Date;
 
 import ar.iua.edu.viano.happyWeather.R;
 
-public class Weather {
+public class Weather extends WeatherDetails {
+
     private double maximum;
     private double minimum;
     private String DOW;//DayOftheWeek
     private String location;
+    @Ignore
     private Date date;
     private double actualTemp;
-    private WeatherDetails weatherDetails;
+   // private WeatherDetails weatherDetails;
     private int weather;
 
+    public Weather(){
 
+    }
     public int getWeather() {
         return weather;
     }
@@ -26,28 +31,24 @@ public class Weather {
         this.weather = weather;
     }
 
-    public Weather() {
+/* Weather() {
 
     }
-
-    public WeatherDetails getWeatherDetails() {
-        return weatherDetails;
-    }
+*/
 
     public Weather(double maximum, double minimum, String DOW, String location, Date date, double actualTemp, WeatherDetails weatherDetails) {
+        super(weatherDetails.getContext(),weatherDetails.getHumidity(),weatherDetails.getHumidity(),
+                weatherDetails.getHumidity(),weatherDetails.getHumidity(),weatherDetails.getHumidity(),
+                weatherDetails.getHumidity(),weatherDetails.getHumidity());
         this.maximum = maximum;
         this.minimum = minimum;
         this.DOW = DOW;
         this.location = location;
         this.date = date;
         this.actualTemp = actualTemp;
-        this.weatherDetails = weatherDetails;
 
     }
 
-    public void setWeatherDetails(WeatherDetails weatherDetails) {
-        this.weatherDetails = weatherDetails;
-    }
 
     public Weather(double maximum, double minimum, String location, Date date,  int weather) {
         this.maximum = maximum;
@@ -57,6 +58,7 @@ public class Weather {
         this.DOW = new SimpleDateFormat("EEEE").format(date); //obtiene el dia de la semana
         this.weather = weather;
     }
+
     public Weather(double maximum, double minimum, double actualTemp, String location, Date date,  int weather) {
         this.maximum = maximum;
         this.minimum = minimum;
@@ -66,6 +68,7 @@ public class Weather {
         this.DOW = new SimpleDateFormat("EEEE").format(date); //obtiene el dia de la semana
         this.weather = weather;
     }
+
     public double getMaximum() {
         return maximum;
     }

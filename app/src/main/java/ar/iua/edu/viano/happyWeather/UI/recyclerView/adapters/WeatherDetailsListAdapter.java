@@ -29,8 +29,8 @@ public class WeatherDetailsListAdapter extends RecyclerView.Adapter<WeatherDetai
     @Override
     public void onBindViewHolder(@NonNull WeatherDetailsHolder weatherDetailsHolder, int i) {
         WeatherDetails weatherDetails = weatherListDetails.get(i);
-        weatherDetailsHolder.getdetail1().setText(weatherDetails.getDetail1());
-        weatherDetailsHolder.getdetail2().setText(weatherDetails.getDetail2());
+        /*weatherDetailsHolder.getdetail1().setText(weatherDetails.getDetail1());
+        weatherDetailsHolder.getdetail2().setText(weatherDetails.getDetail2());*/
 
     }
 

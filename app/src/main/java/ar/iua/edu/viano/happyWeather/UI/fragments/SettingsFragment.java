@@ -41,6 +41,7 @@ public class SettingsFragment extends Fragment {
         save = (Button) retView.findViewById(R.id.btnSave);
         edit = (ImageButton) retView.findViewById(R.id.editButton);
         picture = (ImageButton) retView.findViewById(R.id.picture);
+
         takePicture(picture);
         editEnabled(edit);
         save(save);
@@ -92,9 +93,7 @@ public class SettingsFragment extends Fragment {
                 password.setEnabled(false);
                 save.setVisibility(View.INVISIBLE);
                 editing = !editing;
-                user.setEmail(email.getText().toString());
-                user.setPsw(password.getText().toString());
-                user.setName(fullName.getText().toString());
+                user = new User(email.getText().toString(), password.getText().toString(), fullName.getText().toString());
                 editButtonListener.saveEdit(user);
             }
         });
