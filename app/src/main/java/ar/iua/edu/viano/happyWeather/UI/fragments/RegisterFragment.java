@@ -60,8 +60,9 @@ public class RegisterFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 User user = new User(mailTextView.getText().toString(), password.getText().toString(), name.getText().toString());
+                user.setName(user.getName().trim());
+                user.setUsername(user.getName().split(" ")[0]);
                 registerFragmentListener.doRegister(user);
-
             }
         });
     }

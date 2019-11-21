@@ -9,8 +9,14 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.SeekBar;
+import android.widget.Switch;
+import android.widget.TextView;
+
+import org.w3c.dom.Text;
 
 import ar.iua.edu.viano.happyWeather.Preferences.PreferencesUtils;
 import ar.iua.edu.viano.happyWeather.R;
@@ -25,6 +31,9 @@ public class SettingsFragment extends Fragment {
     private Button  save;
     private ImageButton edit;
     private ImageButton picture;
+    private TextView sliderText;
+    SeekBar seekBar;
+    Switch unitSwitch;
     private Bitmap photo= null;
     private boolean editing = false;
     private PreferencesUtils preferencesUtils;
@@ -41,11 +50,15 @@ public class SettingsFragment extends Fragment {
         save = (Button) retView.findViewById(R.id.btnSave);
         edit = (ImageButton) retView.findViewById(R.id.editButton);
         picture = (ImageButton) retView.findViewById(R.id.picture);
-
+        sliderText = (TextView) retView.findViewById(R.id.sliderText);
+        seekBar = (SeekBar) retView.findViewById(R.id.seekBar);
+        unitSwitch = (Switch) retView.findViewById(R.id.unitSwitch);
         takePicture(picture);
         editEnabled(edit);
         save(save);
         preferencesUtils = new PreferencesUtils(getActivity().getApplicationContext());
+        sliderText.setText("Update weather each : " + preferencesUtils.getUpdateRatio() + " hours");
+        seekBar.setProgress(preferencesUtils.getUpdateRatio());
         setTexts();
         return retView;
     }
@@ -54,6 +67,37 @@ public class SettingsFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         editButtonListener = (EditButtonListener) getActivity();
+        unitSwitch.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(unitSwitch.isChecked()){
+                    preferencesUtils.setUnits((String) unitSwitch.getTextOn());
+                }else{
+                    preferencesUtils.setUnits((String) unitSwitch.getTextOff());
+                }
+            }
+        });
+        seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
+                if( i == 0){
+                    i=1;
+                    seekBar.setProgress(i);
+                }
+                sliderText.setText("Update weather each : " + i + " hours");
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+
+                preferencesUtils.setUpdateRatio(seekBar.getProgress());
+            }
+        });
     }
     public interface EditButtonListener{
         void saveEdit(User user);

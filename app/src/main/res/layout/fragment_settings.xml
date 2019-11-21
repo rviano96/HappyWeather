@@ -1,97 +1,140 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".UI.fragments.SettingsFragment"
     android:background="@android:color/darker_gray"
-    >
-    <ImageButton
-        android:id="@+id/editButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentRight="true"
-        android:background="@drawable/ic_edit_24px"
-        android:layout_marginRight="30dp"
-        android:layout_marginTop="10dp"
-        android:visibility="visible"
+    tools:context=".UI.fragments.SettingsFragment">
 
-        />
-    <LinearLayout
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:weightSum="4"
-        android:orientation="vertical"
-        android:layout_below="@+id/editButton"
-        >
+        android:layout_height="match_parent">
+
         <ImageButton
-            android:id="@+id/picture"
-            android:layout_width="100dp"
-            android:layout_height="100dp"
-            android:layout_gravity="center"
-            android:clickable="false"
+            android:id="@+id/editButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentRight="true"
+            android:layout_marginTop="10dp"
+            android:layout_marginRight="30dp"
+            android:background="@drawable/ic_edit_24px"
+            android:visibility="visible"
+
             />
-        <TextView
-            android:id="@+id/fstTxt"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="@dimen/marginLeft"
-            android:layout_marginTop="@dimen/marginTopText"
-            android:text="@string/fullName"
-            android:layout_weight="0.085"/>
-        <EditText
-            android:id="@+id/txtName"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:inputType="textPersonName"
-            android:layout_weight="0.085"
-            android:ems="10"
-            android:enabled="false"/>
-        <TextView
-            android:id="@+id/secTxt"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/email"
-            android:layout_weight="0.085"
-            android:layout_marginLeft="@dimen/marginLeft" />
-        <EditText
-            android:id="@+id/txtEmail"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:inputType="textEmailAddress"
-            android:enabled="false"
-            android:layout_weight="0.085"
-            android:ems="10" />
-        <TextView
-            android:id="@+id/thirdTxt"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/password"
-            android:layout_weight="0.085"
-            android:layout_marginLeft="@dimen/marginLeft" />
-        <EditText
-            android:id="@+id/txtPwd"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:inputType="textPassword"
-            android:enabled="false"
-            android:layout_weight="0.085"
-            android:ems="10" />
 
-        <Button
-            android:id="@+id/btnSave"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:layout_weight="0.085"
-            android:visibility="invisible"
-            android:text="Save" />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@+id/editButton"
+            android:orientation="vertical"
+            android:weightSum="4">
 
-    </LinearLayout>
+            <ImageButton
+                android:id="@+id/picture"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:layout_gravity="center"
+                android:clickable="false" />
+
+            <TextView
+                android:id="@+id/fstTxt"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/marginLeft"
+                android:layout_marginTop="@dimen/marginTopText"
+                android:layout_weight="0.085"
+                android:text="@string/fullName" />
+
+            <EditText
+                android:id="@+id/txtName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_weight="0.085"
+                android:ems="10"
+                android:enabled="false"
+                android:inputType="textPersonName" />
+
+            <TextView
+                android:id="@+id/secTxt"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/marginLeft"
+                android:layout_weight="0.085"
+                android:text="@string/email" />
+
+            <EditText
+                android:id="@+id/txtEmail"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_weight="0.085"
+                android:ems="10"
+                android:enabled="false"
+                android:inputType="textEmailAddress" />
+
+            <TextView
+                android:id="@+id/thirdTxt"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/marginLeft"
+                android:layout_weight="0.085"
+                android:text="@string/password" />
+
+            <EditText
+                android:id="@+id/txtPwd"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_weight="0.085"
+                android:ems="10"
+                android:enabled="false"
+                android:inputType="textPassword" />
+            <Button
+                android:id="@+id/btnSave"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_weight="0.085"
+                android:text="Save"
+                android:visibility="invisible" />
+
+            <Switch
+                android:id="@+id/unitSwitch"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_weight="0.085"
+                android:checked="true"
+                android:layout_marginTop="10dp"
+                android:text="@string/units"
+                android:textOff="@string/standard"
+                android:textOn="@string/metric" />
+            <TextView
+                android:id="@+id/sliderText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="20dp" />
+
+            <SeekBar
+                android:id="@+id/seekBar"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginLeft="30dp"
+                android:layout_marginRight="30dp"
+                android:layout_marginBottom="10dp"
+                android:layout_weight="0.085"
+                android:max="24"
+                android:min="1"
+
+                android:progress="1" />
 
 
-</RelativeLayout>
+        </LinearLayout>
+
+
+    </RelativeLayout>
+
+</ScrollView>

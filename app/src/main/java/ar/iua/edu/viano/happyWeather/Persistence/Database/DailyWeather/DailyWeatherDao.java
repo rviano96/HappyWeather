@@ -4,23 +4,27 @@ import android.arch.persistence.room.Dao;
 import android.arch.persistence.room.Insert;
 import android.arch.persistence.room.OnConflictStrategy;
 import android.arch.persistence.room.Query;
+import android.arch.persistence.room.Update;
 
 import java.util.List;
 
-import ar.iua.edu.viano.happyWeather.Persistence.Data.DailyWeather;
+import ar.iua.edu.viano.happyWeather.Persistence.Data.Weather;
 
 @Dao
 public interface DailyWeatherDao {
 
-    @Insert(onConflict = OnConflictStrategy.IGNORE)
-    void insert(DailyWeather weather);
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    void insert(Weather weather);
 
-    @Query("DELETE FROM DailyWeather")
+    @Update(onConflict = OnConflictStrategy.REPLACE)
+    void updateWeather(Weather weather);
+
+    @Query("DELETE FROM Weather")
     void deleteAll();
 
-    @Query("SELECT * FROM DailyWeather ORDER BY id ASC")
-    List<DailyWeather> getAllDaysOrdered();
+    @Query("SELECT * FROM Weather ORDER BY id ASC")
+    List<Weather> getAllDaysOrdered();
 
-    @Query("SELECT * FROM DailyWeather WHERE dow == :dayName")
-    DailyWeather getDayByName(String dayName);
+    @Query("SELECT * FROM Weather WHERE dow == :dayName")
+    Weather getDayByName(String dayName);
 }

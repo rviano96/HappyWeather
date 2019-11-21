@@ -9,15 +9,17 @@ import android.view.ViewGroup;
 import java.text.SimpleDateFormat;
 import java.util.List;
 
+import ar.iua.edu.viano.happyWeather.Persistence.Data.Weather;
 import ar.iua.edu.viano.happyWeather.R;
-import ar.iua.edu.viano.happyWeather.Model.Weather;
+//import ar.iua.edu.viano.happyWeather.Model.Weather;
 import ar.iua.edu.viano.happyWeather.UI.recyclerView.WeatherHolder;
 
 public class WeatherListAdapter extends RecyclerView.Adapter<WeatherHolder> {
     private List<Weather> weatherList;
 
 
-    public WeatherListAdapter(@NonNull List<Weather> weather) {
+    public WeatherListAdapter(@NonNull List
+            <Weather> weather) {
         this.weatherList = weather;
     }
 
@@ -32,7 +34,8 @@ public class WeatherListAdapter extends RecyclerView.Adapter<WeatherHolder> {
     public void onBindViewHolder(@NonNull WeatherHolder weatherHolder, int i) {
         SimpleDateFormat formato = new SimpleDateFormat("HH");
         Weather weather = weatherList.get(i);
-        String data = formato.format(weather.getDate());
+        //String data = formato.format(weather.getDate());
+        String data = "5";
         weatherHolder.gettime().setText(data);
         weatherHolder.getactualTemp().setText(Double.toString(weather.getActualTemp()) + "°");
         //sunny

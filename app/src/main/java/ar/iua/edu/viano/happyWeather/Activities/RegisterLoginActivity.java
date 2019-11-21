@@ -2,14 +2,22 @@ package ar.iua.edu.viano.happyWeather.Activities;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.PorterDuff;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Base64;
 import android.view.View;
+import android.widget.TextView;
+import android.widget.Toast;
+
+import java.io.UnsupportedEncodingException;
+import java.util.List;
 
 import ar.iua.edu.viano.happyWeather.Constants.Constants;
+import ar.iua.edu.viano.happyWeather.Persistence.Database.Users.UserRepository;
 import ar.iua.edu.viano.happyWeather.Preferences.PreferencesUtils;
 import ar.iua.edu.viano.happyWeather.UI.fragments.LoginFragment;
 import ar.iua.edu.viano.happyWeather.R;
@@ -24,6 +32,9 @@ public class RegisterLoginActivity extends AppCompatActivity implements LoginFra
     FragmentTransaction fragmentTransaction;
     private PreferencesUtils preferencesUtils;
     private int actualFragment = -1; //0 si es login, 1 si es register, -1 otherwiese
+    //BDD
+    private UserRepository userRepository;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -38,6 +49,7 @@ public class RegisterLoginActivity extends AppCompatActivity implements LoginFra
         fragmentTransaction.add(R.id.fragment, fragmentLogin, "Login Fragment");
         fragmentTransaction.commit();
         preferencesUtils = new PreferencesUtils(this);
+        userRepository = new UserRepository(getApplication());
     }
 
     @Override
@@ -60,7 +72,7 @@ public class RegisterLoginActivity extends AppCompatActivity implements LoginFra
 
     @Override
     public void onBackPressed() {
-        if(actualFragment==0)
+        if (actualFragment == 0)
             super.onBackPressed();
         else
             navigateToLoginScreen();
@@ -68,18 +80,52 @@ public class RegisterLoginActivity extends AppCompatActivity implements LoginFra
 
     @Override
     public void doRegister(User user) {
+       // byte[] data = user.getPsw().getBytes();
+        //String text = Base64.encodeToString(data, Base64.DEFAULT);
+        //String password = user.getPsw();
+        //user.setPsw(text);
+        userRepository.insert(user);
+        //user.setPsw(password);
         doLogin(user);
     }
 
     @Override
     public void doLogin(User user) {
-        preferencesUtils.setUserEmail(user.getEmail());
-        preferencesUtils.setUserName(user.getName());
-        preferencesUtils.setUserIsLoggedIn(true);
-        Intent intent = new Intent(this, HomeActivity.class);
-        intent.putExtra(Constants.USER_DATA, user);
-        startActivity(intent);
-        finish();
+        List<User> u = userRepository.getUserByName(user.getUsername());
+        if (u.size() > 0) {
+            //byte[] data = user.getPsw().getBytes();
+            //String text = Base64.encodeToString(data, Base64.DEFAULT);
+            if (u.get(0).getPsw().equals(user.getPsw())) {
+                user = u.get(0);
+                preferencesUtils.setUserEmail(user.getEmail());
+                preferencesUtils.setUserName(user.getUsername());
+                preferencesUtils.setUserIsLoggedIn(true);
+                Intent intent = new Intent(this, HomeActivity.class);
+                intent.putExtra(Constants.USER_DATA, user);
+                startActivity(intent);
+                finish();
+            }else{
+                Toast toast = Toast.makeText(getApplicationContext(), getResources().getString(R.string.cantLogin), Toast.LENGTH_LONG);
+                View view = toast.getView();
+                //Gets the actual oval background of the Toast then sets the colour filter
+                view.getBackground().setColorFilter(getResources().getColor(R.color.error), PorterDuff.Mode.SRC_IN);
+                //Gets the TextView from the Toast so it can be editted
+                TextView txt = view.findViewById(android.R.id.message);
+                txt.setTextColor(getResources().getColor(R.color.black));
+                toast.show();
+            }
+        }else{
+            Toast toast = Toast.makeText(getApplicationContext(), getResources().getString(R.string.cantLogin), Toast.LENGTH_LONG);
+            View view = toast.getView();
+            //Gets the actual oval background of the Toast then sets the colour filter
+            view.getBackground().setColorFilter(getResources().getColor(R.color.error), PorterDuff.Mode.SRC_IN);
+            //Gets the TextView from the Toast so it can be editted
+            TextView txt = view.findViewById(android.R.id.message);
+            txt.setTextColor(getResources().getColor(R.color.black));
+            toast.show();
+        }
+
     }
+
 
 }

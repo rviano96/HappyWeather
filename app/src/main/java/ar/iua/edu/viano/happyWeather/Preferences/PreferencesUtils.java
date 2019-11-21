@@ -11,14 +11,41 @@ public class PreferencesUtils {
     private static final String USER_PICTURE = "user_picture";
     private static final String USER_IS_LOGGED_IN = "user_is_logged_in";
     private static final String PREFS_NAME = "ar.iua.edu.viano.happyWeather";
+    private static final String LAST_UPDATE = "last_update";
+    private static final String UNITS = "units";
+    private static final String UPDATE_RATIO = "update_ratio";
 
-    public PreferencesUtils(Context context){
+    public PreferencesUtils(Context context) {
         this.context = context;
         sharedPreferences = this.context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
     }
 
     public void setUserName(String userName) {
         sharedPreferences.edit().putString(USER_NAME, userName).apply();
+    }
+
+    public void setLastUpdate(String lastUpdate) {
+        sharedPreferences.edit().putString(LAST_UPDATE, lastUpdate).apply();
+    }
+
+    public String getLastUpdate() {
+        return sharedPreferences.getString(LAST_UPDATE, "default value");
+    }
+
+    public void setUnits(String units) {
+        sharedPreferences.edit().putString(UNITS, units).apply();
+    }
+
+    public String getUnits() {
+        return sharedPreferences.getString(UNITS, "default value");
+    }
+
+    public void setUpdateRatio(int updateRatio) {
+        sharedPreferences.edit().putInt(UPDATE_RATIO, updateRatio).apply();
+    }
+
+    public int getUpdateRatio() {
+        return sharedPreferences.getInt(UPDATE_RATIO, 1);
     }
 
     public String getUserName() {

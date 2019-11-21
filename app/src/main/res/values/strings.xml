@@ -15,6 +15,11 @@
     <string name="openBrowser">Open Browser</string>
     <string name="showUsers">Show Users</string>
     <string name="nameApp">Happy Weather</string>
+    <string name="username">Username</string>
+    <string name="cantLogin">Incorrect password or username</string>
+    <string name="metric">Metric</string>
+    <string name="standard">Standard</string>
+    <string name="units">Units</string>
     <!--DRAWER MENU-->
     <string name="itemHelpTitle">Something to say?</string>
     <string name="menuItemWeather">Weather</string>

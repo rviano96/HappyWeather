@@ -1,9 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:layout_gravity="center_horizontal"
     android:fillViewport="true">
+
 
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
@@ -11,6 +13,7 @@
         android:background="@android:color/darker_gray"
         android:orientation="vertical"
         android:weightSum="4">
+
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -44,6 +47,11 @@
                 android:gravity="center"
                 android:text="31°"
                 android:textSize="20dp" />
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/recyclerViewWeatherToday"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
         </LinearLayout>
 
         <View
@@ -52,7 +60,6 @@
             android:layout_height="2dp"
             android:layout_below="@+id/temp"
             android:layout_alignParentRight="true"
-
             android:background="#000000" />
 
         <LinearLayout
@@ -92,141 +99,102 @@
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
+
                 <LinearLayout
-                    android:orientation="horizontal"
                     android:layout_width="fill_parent"
-                    android:layout_height="60dp">
+                    android:layout_height="60dp"
+                    android:orientation="horizontal">
+
                     <LinearLayout
                         android:layout_width="fill_parent"
                         android:layout_height="match_parent"
                         android:layout_weight="1"
                         android:gravity="center_horizontal|center_vertical"
                         android:orientation="horizontal">
+
                         <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
                             android:id="@+id/humidity"
-                            android:gravity="center"/>
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:gravity="center" />
                     </LinearLayout>
+
                     <LinearLayout
                         android:layout_width="fill_parent"
                         android:layout_height="match_parent"
                         android:layout_weight="1"
                         android:gravity="center_horizontal|center_vertical"
                         android:orientation="horizontal">
+
                         <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:id="@+id/riskOfRain"
-                            android:gravity="center"/>
-                    </LinearLayout>
-                </LinearLayout>
-                <View
-                    android:layout_width="fill_parent"
-                    android:layout_height="0.5dp"
-                    android:layout_below="@+id/temp"
-                    android:layout_alignParentRight="true"
-                    android:background="#C0C0C0" />
-                <LinearLayout
-                    android:orientation="horizontal"
-                    android:layout_width="fill_parent"
-                    android:layout_height="60dp">
-                    <LinearLayout
-                        android:layout_width="fill_parent"
-                        android:layout_height="match_parent"
-                        android:layout_weight="1"
-                        android:gravity="center_horizontal|center_vertical"
-                        android:orientation="horizontal">
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
                             android:id="@+id/pressure"
-                            android:gravity="center"/>
-                    </LinearLayout>
-                    <LinearLayout
-                        android:layout_width="fill_parent"
-                        android:layout_height="match_parent"
-                        android:layout_weight="1"
-                        android:gravity="center_horizontal|center_vertical"
-                        android:orientation="horizontal">
-                        <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:id="@+id/rain"
-                            android:gravity="center"/>
+                            android:gravity="center" />
                     </LinearLayout>
                 </LinearLayout>
+
                 <View
                     android:layout_width="fill_parent"
                     android:layout_height="0.5dp"
                     android:layout_below="@+id/temp"
                     android:layout_alignParentRight="true"
                     android:background="#C0C0C0" />
+
                 <LinearLayout
-                    android:orientation="horizontal"
                     android:layout_width="fill_parent"
-                    android:layout_height="60dp">
+                    android:layout_height="60dp"
+                    android:orientation="horizontal">
+
                     <LinearLayout
                         android:layout_width="fill_parent"
                         android:layout_height="match_parent"
                         android:layout_weight="1"
                         android:gravity="center_horizontal|center_vertical"
                         android:orientation="horizontal">
+
                         <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:id="@+id/apparentTemp"
-                            android:gravity="center"/>
+                        android:id="@+id/wind"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:gravity="center" />
                     </LinearLayout>
+
                     <LinearLayout
                         android:layout_width="fill_parent"
                         android:layout_height="match_parent"
                         android:layout_weight="1"
                         android:gravity="center_horizontal|center_vertical"
                         android:orientation="horizontal">
+
                         <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:id="@+id/wind"
-                            android:gravity="center"/>
-                    </LinearLayout>
-                </LinearLayout>
-                <View
-                    android:layout_width="fill_parent"
-                    android:layout_height="0.5dp"
-                    android:layout_below="@+id/temp"
-                    android:layout_alignParentRight="true"
-                    android:background="#C0C0C0" />
-                <LinearLayout
-                    android:orientation="horizontal"
-                    android:layout_width="fill_parent"
-                    android:layout_height="60dp">
-                    <LinearLayout
-                        android:layout_width="fill_parent"
-                        android:layout_height="match_parent"
-                        android:layout_weight="1"
-                        android:gravity="center_horizontal|center_vertical"
-                        android:orientation="horizontal">
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
                             android:id="@+id/visibility"
-                            android:gravity="center"/>
-                    </LinearLayout>
-                    <LinearLayout
-                        android:layout_width="fill_parent"
-                        android:layout_height="match_parent"
-                        android:layout_weight="1"
-                        android:gravity="center_horizontal|center_vertical"
-                        android:orientation="horizontal">
-                        <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:gravity="center"/>
+                            android:gravity="center" />
                     </LinearLayout>
                 </LinearLayout>
+
+                <View
+                    android:layout_width="fill_parent"
+                    android:layout_height="0.5dp"
+                    android:layout_below="@+id/temp"
+                    android:layout_alignParentRight="true"
+                    android:background="#C0C0C0" />
+
+
+
+                <View
+                    android:layout_width="fill_parent"
+                    android:layout_height="0.5dp"
+                    android:layout_below="@+id/temp"
+                    android:layout_alignParentRight="true"
+                    android:background="#C0C0C0" />
+
+
 
             </LinearLayout>
         </LinearLayout>
     </LinearLayout>
+
 </ScrollView>

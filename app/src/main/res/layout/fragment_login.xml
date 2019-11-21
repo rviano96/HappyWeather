@@ -24,15 +24,15 @@
         android:layout_marginLeft="@dimen/marginLeft"
         android:layout_marginTop="@dimen/marginTopText"
         android:layout_weight="0.09"
-        android:text="@string/email" />
+        android:text="@string/username" />
     <EditText
-        android:id="@+id/txtEmail"
+        android:id="@+id/txtUsername"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:inputType="textEmailAddress"
-        android:drawableLeft="@drawable/ic_email_black_18dp"
-        android:drawableStart="@drawable/ic_email_black_18dp"
+        android:inputType="text"
+        android:drawableLeft="@drawable/ic_account_circle_black_18dp"
+        android:drawableStart="@drawable/ic_account_circle_black_18dp"
         android:layout_weight="0.09"
         android:ems="10"/>
 

@@ -18,6 +18,9 @@ public class WeatherForecastRepository {
         weatherDao = database.weatherForecastDao();
     }
 
+    public void deleteWeatherForecast(){
+        new deleteWeatherForecas(weatherDao).execute();
+    }
     public List<WeatherForecast> getAllDays() {
         try {
             allDays = new getDaysAsyncTask(weatherDao).execute().get();
@@ -33,6 +36,10 @@ public class WeatherForecastRepository {
         new insterWeather(weatherDao).execute(weather);
     }
 
+    public void updateWeatherForecas(WeatherForecast weather) {
+        new updateWeatherForecas(weatherDao).execute(weather);
+    }
+
     private static class insterWeather extends AsyncTask<WeatherForecast, Void, Void> {
 
         private WeatherForecastDao asyncTaskWeatherDao;
@@ -44,6 +51,37 @@ public class WeatherForecastRepository {
         @Override
         protected Void doInBackground(WeatherForecast... weathers) {
             asyncTaskWeatherDao.insert(weathers[0]);
+            return null;
+        }
+    }
+
+    private static class deleteWeatherForecas extends AsyncTask<Void, Void, Void> {
+
+        private WeatherForecastDao asyncTaskWeatherDao;
+
+        deleteWeatherForecas(WeatherForecastDao weatherDao) {
+            asyncTaskWeatherDao = weatherDao;
+        }
+
+        @Override
+        protected Void doInBackground(Void... voids) {
+            asyncTaskWeatherDao.deleteAll();
+            return null;
+        }
+    }
+
+
+    private static class updateWeatherForecas extends AsyncTask<WeatherForecast, Void, Void> {
+
+        private WeatherForecastDao asyncTaskWeatherDao;
+
+        updateWeatherForecas(WeatherForecastDao weatherDao) {
+            asyncTaskWeatherDao = weatherDao;
+        }
+
+        @Override
+        protected Void doInBackground(WeatherForecast... weathers) {
+            asyncTaskWeatherDao.updateWeatherForecas(weathers[0]);
             return null;
         }
     }

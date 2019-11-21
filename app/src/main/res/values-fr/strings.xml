@@ -16,6 +16,12 @@
     <string name="openBrowser">Ouvrir Browser</string>
     <string name="showUsers">Montrer Utilisateurs</string>
     <string name="nameApp">Happy Weather</string>
+    <string name="username">Username</string>
+    <string name="cantLogin">"Nom d'utilisateur  ou mot de pass incorrects"</string>
+    <string name="metric">Métrique</string>
+    <string name="standard">Standard</string>
+    <string name="units">Unités</string>
+
     <!--DRAWER MENU-->
     <string name="itemHelpTitle">Quelque chose à dire?</string>
     <string name="menuItemWeather">Météo</string>

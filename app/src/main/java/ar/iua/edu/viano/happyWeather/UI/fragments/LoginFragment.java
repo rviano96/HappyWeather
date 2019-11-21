@@ -16,14 +16,14 @@ import ar.iua.edu.viano.happyWeather.Model.User;
 
 public class LoginFragment extends Fragment {
     private LoginFragmentListener loginFragmentListener;
-    private TextView mailTextView;
+    private TextView usernameTextView;
     private TextView password;
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View retView = inflater.inflate(R.layout.fragment_login, container, false);
         TextView goToRegisterFragment = (TextView)retView.findViewById(R.id.lnkRegister);
-        mailTextView = (TextView)retView.findViewById(R.id.txtEmail);
+        usernameTextView = (TextView)retView.findViewById(R.id.txtUsername);
         password = (TextView)retView.findViewById(R.id.txtPwd);
         Button doLoginButon = (Button) retView.findViewById(R.id.btnLogin);
         goToRegistFragment(goToRegisterFragment);
@@ -57,7 +57,9 @@ public class LoginFragment extends Fragment {
         buttonLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                 User user = new User(mailTextView.getText().toString(), password.getText().toString());
+                 User user = new User();
+                 user.setPsw(password.getText().toString());
+                 user.setUsername(usernameTextView.getText().toString());
                 loginFragmentListener.doLogin(user);
 
             }

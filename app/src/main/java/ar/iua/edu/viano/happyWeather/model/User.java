@@ -1,13 +1,39 @@
 package ar.iua.edu.viano.happyWeather.Model;
 
+import android.arch.persistence.room.Entity;
+import android.arch.persistence.room.PrimaryKey;
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.support.annotation.NonNull;
 
+@Entity(tableName = "Users")
 public class User implements Parcelable {
-
+    @PrimaryKey(autoGenerate = true)
+    @NonNull
+    private int id;
     private String email;
     private String psw;
     private String name;
+    private String username;
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public User() {
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
 
     protected User(Parcel in) {
         email = in.readString();
@@ -20,6 +46,7 @@ public class User implements Parcelable {
         this.psw = psw;
         this.name = name;
     }
+
     public User(String email, String psw) {
         this.email = email;
         this.psw = psw;

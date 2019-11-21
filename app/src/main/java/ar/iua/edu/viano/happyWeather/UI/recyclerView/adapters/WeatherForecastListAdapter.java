@@ -8,14 +8,15 @@ import android.view.ViewGroup;
 
 import java.util.List;
 
+import ar.iua.edu.viano.happyWeather.Persistence.Data.WeatherForecast;
 import ar.iua.edu.viano.happyWeather.R;
 import ar.iua.edu.viano.happyWeather.UI.recyclerView.WeatherForecastHolder;
-import ar.iua.edu.viano.happyWeather.Model.Weather;
+//import ar.iua.edu.viano.happyWeather.Model.Weather;
 
 public class WeatherForecastListAdapter extends RecyclerView.Adapter<WeatherForecastHolder> {
-    private List<Weather> weatherForecastList;
+    private List<WeatherForecast> weatherForecastList;
 
-    public WeatherForecastListAdapter(@NonNull List<Weather> weatherForecast) {
+    public WeatherForecastListAdapter(@NonNull List<WeatherForecast> weatherForecast) {
         this.weatherForecastList = weatherForecast;
     }
 
@@ -28,23 +29,24 @@ public class WeatherForecastListAdapter extends RecyclerView.Adapter<WeatherFore
 
     @Override
     public void onBindViewHolder(@NonNull WeatherForecastHolder weatherForecastHolder, int i) {
-        Weather weather = weatherForecastList.get(i);
+        WeatherForecast weather = weatherForecastList.get(i);
         weatherForecastHolder.getDOW().setText(weather.getDOW().toUpperCase());
         weatherForecastHolder.getmaxTemp().setText(weather.getMaximum()+ "°");
         weatherForecastHolder.getminTemp().setText(weather.getMinimum() + "°");
         //sunny
-
-        if (weather.getWeather() == 0) {
-            weatherForecastHolder.geticonView().setBackgroundResource(R.drawable.ic_iconfinder_weather_01_1530392);
-        } else {//cloudy
-            if (weather.getWeather() == 1) {
-                weatherForecastHolder.geticonView().setBackgroundResource(R.drawable.ic_iconfinder_cloudy);
-            } else {//snowy
-                if (weather.getWeather() == 2) {
-                    weatherForecastHolder.geticonView().setBackgroundResource(R.drawable.ic_iconfinder_snowflake_1651934);
-                } else {//rainny
-                    if (weather.getWeather() == 3) {
-                        weatherForecastHolder.geticonView().setBackgroundResource(R.drawable.ic_iconfinder_rainny);
+        if(weather.getWeather() != -1){
+            if (weather.getWeather() == 0) {
+                weatherForecastHolder.geticonView().setBackgroundResource(R.drawable.ic_iconfinder_weather_01_1530392);
+            } else {//cloudy
+                if (weather.getWeather() == 1) {
+                    weatherForecastHolder.geticonView().setBackgroundResource(R.drawable.ic_iconfinder_cloudy);
+                } else {//snowy
+                    if (weather.getWeather() == 2) {
+                        weatherForecastHolder.geticonView().setBackgroundResource(R.drawable.ic_iconfinder_snowflake_1651934);
+                    } else {//rainny
+                        if (weather.getWeather() == 3) {
+                            weatherForecastHolder.geticonView().setBackgroundResource(R.drawable.ic_iconfinder_rainny);
+                        }
                     }
                 }
             }
