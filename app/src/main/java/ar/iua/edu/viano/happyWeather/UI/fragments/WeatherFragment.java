@@ -68,6 +68,7 @@ public class WeatherFragment extends Fragment {
     private TextView actualWeather;
     //temp
     private TextView temp;
+    private TextView lastUpdate;
     private List<WeatherForecast> weatherForecast = new ArrayList<>();
     private List<Weather> weather = new ArrayList<>();
     // BDD
@@ -82,6 +83,7 @@ public class WeatherFragment extends Fragment {
     Calendar calendario = new GregorianCalendar();
     private PreferencesUtils preferencesUtils;
     private ReloadButtonListener reloadButtonListener;
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -96,6 +98,7 @@ public class WeatherFragment extends Fragment {
         location = retView.findViewById(R.id.location);
         actualWeather = retView.findViewById(R.id.actualWeather);
         temp = retView.findViewById(R.id.temp);
+        lastUpdate = retView.findViewById(R.id.lastUpdate);
         // initWeatherDetails();
         humidity = retView.findViewById(R.id.humidity);
         pressure = retView.findViewById(R.id.pressure);
@@ -103,10 +106,10 @@ public class WeatherFragment extends Fragment {
         wind = retView.findViewById(R.id.wind);
         preferencesUtils = new PreferencesUtils(getActivity().getApplicationContext());
         initAllWeather();
-        if(listWeather.size() == 0 || listWeatherForecast.size() == 0 || weatherToday.size() == 0)
-            reloadButtonListener.refreshWeather();
-        initAllWeather();
-        setActualWeather();
+        //if(listWeather.size() == 0 || listWeatherForecast.size() == 0 || weatherToday.size() == 0)
+        //reloadButtonListener.refreshWeather();
+        //initAllWeather();
+        //setActualWeather();
         setDetails();
         //--------------------------Recycler del pronostico --------------------------------------------------------------------
         recyclerViewForecast = retView.findViewById(R.id.recyclerViewWeatherForecast);
@@ -117,11 +120,6 @@ public class WeatherFragment extends Fragment {
         recyclerViewWeather = retView.findViewById(R.id.recyclerViewWeather);
         recyclerViewWeather.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false));
         recyclerViewWeather.setAdapter(new WeatherListAdapter(listWeather));
-        //-------------------------Recycler del clima actual--------------------------------------------------------------------------
-        recyclerViewWeatherToday = retView.findViewById(R.id.recyclerViewWeatherToday);
-        recyclerViewWeatherToday.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false));
-        recyclerViewWeatherToday.setAdapter(new WeatherForecastListAdapter(weatherToday));
-
         return retView;
     }
 
@@ -142,25 +140,27 @@ public class WeatherFragment extends Fragment {
     }
 
     private void setActualWeather() {
-        listWeather = dailyWeatherRepository.getAllHours();
-        listWeatherForecast = weatherForecastRepository.getAllDays();
+        /*listWeather = dailyWeatherRepository.getAllHours();
+        listWeatherForecast = weatherForecastRepository.getAllDays();*/
+        for(int i = 0; i<listWeatherForecast.size() ;i ++){
+            listWeatherForecast.get(i).setDOW(setDOW( Integer.parseInt(listWeatherForecast.get(i).getDOW())));
+        }
         location.setText(listWeather.get(0).getLocation());
         actualWeather.setText(R.string.snowy);
         temp.setText(listWeather.get(0).getActualTemp() + "°");
+        lastUpdate.setText("Last update: " + preferencesUtils.getLastUpdate());
         WeatherForecast fw = new WeatherForecast();
         fw.setDate(listWeather.get(0).getDate());
-        fw.setDOW(preferencesUtils.getLastUpdate());
         fw.setMaximum(listWeather.get(0).getMaximum());
         fw.setMinimum(listWeather.get(0).getMinimum());
         fw.setWeather(-1);
-        weatherToday.add(fw);
+        //weatherToday.add(fw);
     }
 
     private void initAllWeather() {
         listWeather = dailyWeatherRepository.getAllHours();
         listWeatherForecast = weatherForecastRepository.getAllDays();
-
-
+        setActualWeather();
     }
 
     private void initWeather() {
@@ -211,7 +211,6 @@ public class WeatherFragment extends Fragment {
                 "15", "10", "15", "9");
 */
     }
-
 
 
     public interface ReloadButtonListener {

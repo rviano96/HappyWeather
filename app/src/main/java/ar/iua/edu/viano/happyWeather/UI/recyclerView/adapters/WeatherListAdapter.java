@@ -1,5 +1,6 @@
 package ar.iua.edu.viano.happyWeather.UI.recyclerView.adapters;
 
+import android.content.res.Resources;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -35,9 +36,9 @@ public class WeatherListAdapter extends RecyclerView.Adapter<WeatherHolder> {
         SimpleDateFormat formato = new SimpleDateFormat("HH");
         Weather weather = weatherList.get(i);
         //String data = formato.format(weather.getDate());
-        String data = "5";
+        String data = String.valueOf(weather.getHour());
         weatherHolder.gettime().setText(data);
-        weatherHolder.getactualTemp().setText(Double.toString(weather.getActualTemp()) + "°");
+        weatherHolder.getactualTemp().setText((weather.getActualTemp()) + "°");
         //sunny
         if (weather.getWeather() == 0) {
             weatherHolder.geticonView().setBackgroundResource(R.drawable.ic_iconfinder_weather_01_1530392);

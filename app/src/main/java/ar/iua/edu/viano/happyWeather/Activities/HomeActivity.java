@@ -28,6 +28,9 @@ import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.widget.Toast;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+
 import java.io.BufferedInputStream;
 import java.io.BufferedReader;
 import java.io.File;
@@ -45,8 +48,10 @@ import java.util.Date;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 
+import ar.iua.edu.viano.happyWeather.Constants.Constants;
 import ar.iua.edu.viano.happyWeather.CurrentWeatherService;
 import ar.iua.edu.viano.happyWeather.GPS;
+import ar.iua.edu.viano.happyWeather.Model.DTO.ForecastFromApi;
 import ar.iua.edu.viano.happyWeather.Model.DTO.WeatherFromApi;
 import ar.iua.edu.viano.happyWeather.Model.WeatherDetails;
 import ar.iua.edu.viano.happyWeather.Persistence.Data.Weather;
@@ -95,6 +100,22 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
             // Permission is not granted
             ActivityCompat.requestPermissions(this,
                     new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
+                    PackageManager.GET_PERMISSIONS);
+
+        }
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.INTERNET) !=
+                PackageManager.PERMISSION_GRANTED) {
+            // Permission is not granted
+            ActivityCompat.requestPermissions(this,
+                    new String[]{Manifest.permission.INTERNET},
+                    PackageManager.GET_PERMISSIONS);
+
+        }
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_NETWORK_STATE) !=
+                PackageManager.PERMISSION_GRANTED) {
+            // Permission is not granted
+            ActivityCompat.requestPermissions(this,
+                    new String[]{Manifest.permission.ACCESS_NETWORK_STATE},
                     PackageManager.GET_PERMISSIONS);
 
         }
@@ -308,46 +329,6 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
 
     }
 
-    //------------------------------CONNECT TO API--------------------------------------------------
-    @Override
-    public void refreshWeather() {
-        if (isNetworkConnected()) {
-            try {
-                g = new GPS(this);
-                l = g.getLocation();
-                if (l != null) {
-                    lat = l.getLatitude();
-                    lon = l.getLongitude();
-                    Toast.makeText(this, "LAT: " + lat + "LON: " + lon, Toast.LENGTH_LONG).show();
-                }
-                List<WeatherFromApi> list = new ArrayList<>();
-                //strings 0 = latittud, strings 1 = longitud, strings 2 = units
-                System.out.println("lat: " + lat + " lon: " + lon);
-                String[] data = {"-31.41", "-64.18", "metric"};
-                //list = new ArrayList<>();
-                list.addAll(new CurrentWeatherService().execute(data).get());
-                saveData(list);
-
-            } catch (ExecutionException e) {
-                e.printStackTrace();
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-        } else {
-            android.app.AlertDialog.Builder builder = new android.app.AlertDialog.Builder(this);
-            builder.setTitle("No Internet Connection");
-            builder.setMessage("You need to have Mobile Data or wifi to access this. Press ok to Exit");
-            builder.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
-                    dialog.dismiss();
-                }
-            });
-            builder.show();
-        }
-
-    }
-
 
     // Método que chequea si hay conexión a Internet.
     private boolean isNetworkConnected() {
@@ -425,5 +406,110 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         usuario = new User("Rodrigoviano@hotmail.com", "1234", "Rodrigo Viano");
     }
 
+    //------------------------------CONNECT TO API--------------------------------------------------
+    @Override
+    public void refreshWeather() {
+        if (isNetworkConnected()) {
+            g = new GPS(this);
+            l = g.getLocation();
 
+            if (l != null) {
+                lat = l.getLatitude();
+                lon = l.getLongitude();
+                Toast.makeText(this, "LAT: " + lat + "LON: " + lon, Toast.LENGTH_LONG).show();
+            }
+            List<WeatherFromApi> list = new ArrayList<>();
+            //strings 0 = latittud, strings 1 = longitud, strings 2 = units
+            System.out.println("lat: " + lat + " lon: " + lon);
+            String[] data = {"-31.41", "-64.18", "metric"};
+            //list = new ArrayList<>();
+            new WeatherService().execute(data);
+
+
+        } else {
+            android.app.AlertDialog.Builder builder = new android.app.AlertDialog.Builder(this);
+            builder.setTitle("No Internet Connection");
+            builder.setMessage("You need to have Mobile Data or wifi to access this. Press ok to Exit");
+            builder.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    dialog.dismiss();
+                }
+            });
+            builder.show();
+        }
+
+    }
+
+
+    private InputStream retrieveStream(String[] position, String type, String units) throws IOException {
+        URL url = null;
+        try {
+            url = new URL("http://api.openweathermap.org/data/2.5/" + type + "?lat=" + position[0] + "&lon=" + position[1] + "&units=" + units + "&APPID=" + Constants.UID);
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+        }
+        HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+        connection.setRequestMethod("GET");
+        return new BufferedInputStream(connection.getInputStream());
+    }
+
+
+    private void showData(String data) {
+        System.out.println("data: " + data);
+    }
+
+    private Gson gson;
+
+    public WeatherFromApi weatherFromApi(String[] position, String units) throws IOException {
+        InputStream source = retrieveStream(position, "weather", units);
+        Reader reader = new InputStreamReader(source);
+        GsonBuilder gsonBuilder = new GsonBuilder();
+        gson = gsonBuilder.create();
+        return gson.fromJson(reader, WeatherFromApi.class);
+    }
+
+    public ForecastFromApi forecastWeather(String[] position, String units) throws IOException {
+        InputStream source = retrieveStream(position, "forecast", units);
+        Reader reader = new InputStreamReader(source);
+        GsonBuilder gsonBuilder = new GsonBuilder();
+        gson = gsonBuilder.create();
+        return gson.fromJson(reader, ForecastFromApi.class);
+
+    }
+
+
+    private class WeatherService extends AsyncTask<String, Void, List<WeatherFromApi>> {
+        private Gson gson;
+        private Weather weather;
+        private WeatherDetails weatherDetails;
+        private WeatherForecast weatherForecast;
+
+
+        @Override
+        protected List<WeatherFromApi> doInBackground(String... strings) {
+            try {
+                WeatherFromApi dto;
+                List<WeatherFromApi> dtoList = new ArrayList<>();
+                //strings 0 = latittud, strings 1 = longitud, strings 2 = units
+                String[] coords = {strings[0], strings[1]};
+                dto = weatherFromApi(coords, strings[2]);
+                dtoList.add(dto);
+                dtoList.addAll(forecastWeather(coords, strings[2]).getWeatherFromApiList());
+                return dtoList;
+
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(List<WeatherFromApi> weatherFromApis) {
+            //super.onPostExecute(weatherFromApis);
+            saveData(weatherFromApis);
+        }
+
+
+    }
 }

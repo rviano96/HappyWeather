@@ -1,5 +1,6 @@
 package ar.iua.edu.viano.happyWeather.UI.recyclerView.adapters;
 
+import android.content.res.Resources;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -30,11 +31,11 @@ public class WeatherForecastListAdapter extends RecyclerView.Adapter<WeatherFore
     @Override
     public void onBindViewHolder(@NonNull WeatherForecastHolder weatherForecastHolder, int i) {
         WeatherForecast weather = weatherForecastList.get(i);
-        weatherForecastHolder.getDOW().setText(weather.getDOW().toUpperCase());
-        weatherForecastHolder.getmaxTemp().setText(weather.getMaximum()+ "°");
+        weatherForecastHolder.getDOW().setText(weather.getDOW());
+        weatherForecastHolder.getmaxTemp().setText(weather.getMaximum() + "°");
         weatherForecastHolder.getminTemp().setText(weather.getMinimum() + "°");
         //sunny
-        if(weather.getWeather() != -1){
+        if (weather.getWeather() != -1) {
             if (weather.getWeather() == 0) {
                 weatherForecastHolder.geticonView().setBackgroundResource(R.drawable.ic_iconfinder_weather_01_1530392);
             } else {//cloudy
@@ -52,6 +53,7 @@ public class WeatherForecastListAdapter extends RecyclerView.Adapter<WeatherFore
             }
         }
     }
+
 
     @Override
     public int getItemCount() {
