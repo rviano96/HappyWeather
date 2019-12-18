@@ -36,9 +36,9 @@
     <string name="pressure">Presion \n %1$s hPa</string>
     <string name="riskOfRain">Riesgo de lluvia \n %1$s %%</string>
     <string name="rain">Precipitaciones \n %1$s cm</string>
-    <string name="apparentTemperature">Sensacion Termica \n %1$s °</string>
-    <string name="wind">Viento \n %1$s km/h</string>
-    <string name="visibility">Visibilidad \n %1$s km</string>
+    <string name="apparentTemperature">Sensacion Termica \n %1$s </string>
+    <string name="wind">Viento \n %1$s </string>
+    <string name="visibility">Visibilidad \n %1$s </string>
     <!--Email-->
     <string name="email_subject">Algo salió mal</string>
     <string name="email_chooser">Enviar email usando...</string>
@@ -51,10 +51,17 @@
     <string name="friday">Viernes</string>
     <string name="saturday">Sabado</string>
     <string name="sunday">Domingo</string>
+    <string name="empty">Null</string>
+
     <!-- WEATHER -->
     <string name="sunny">Soleado</string>
     <string name="cloudy">Nublado</string>
-    <string name="snowy">Nevando</string>
-    <string name="rainny">Lloviendo</string>
-    <string name="partially">Parcialmente %1$s</string>
+    <string name="snowy">Nieve</string>
+    <string name="rainny">Lluvia</string>
+    <string name="thunderstorm">Tormenta eléctrica</string>
+    <!--NOTIFICATION-->
+    <string name="notification_message">Hola %1$s!.\n Ahora: %2$s, Max: %3$s</string>
+    <string name="notification_switch">Notificaciones</string>
+    <string name="drizzle">Llovizna</string>
+
 </resources>

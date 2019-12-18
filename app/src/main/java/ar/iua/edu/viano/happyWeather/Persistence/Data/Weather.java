@@ -96,9 +96,6 @@ public class Weather extends WeatherBase {
         this.actualTemp = actualTemp;
 
 
-
-
-
         this.hour = date.getHours();
         initDetails(weatherDetails.getContext(), weatherDetails.getHumidity(),
                 weatherDetails.getPressure(),
@@ -109,12 +106,11 @@ public class Weather extends WeatherBase {
                              String pressure,
                              String wind,
                              String visibility) {
-        int temp = Integer.parseInt(visibility);
         this.context = context;
         this.humidity = humidity;
         this.pressure = pressure;
         this.wind = wind;
-        this.visibility = String.valueOf(temp/1000);
+        this.visibility = visibility;
     }
 
     public int getId() {

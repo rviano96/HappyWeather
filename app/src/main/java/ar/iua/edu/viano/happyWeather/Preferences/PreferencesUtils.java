@@ -13,6 +13,10 @@ public class PreferencesUtils {
     private static final String PREFS_NAME = "ar.iua.edu.viano.happyWeather";
     private static final String LAST_UPDATE = "last_update";
     private static final String UNITS = "units";
+    private static final String NOTIFICATIONS = "notifications";
+    private static final String ALARM_TIME = "alarm_time";
+    private static final String ACTUAL = "actualTemp";
+    private static final String MAX = "maxTemp";
     private static final String UPDATE_RATIO = "update_ratio";
 
     public PreferencesUtils(Context context) {
@@ -32,12 +36,44 @@ public class PreferencesUtils {
         return sharedPreferences.getString(LAST_UPDATE, "default value");
     }
 
-    public void setUnits(String units) {
-        sharedPreferences.edit().putString(UNITS, units).apply();
+    public void setAlarmTime(String alarmTime) {
+        sharedPreferences.edit().putString(ALARM_TIME, alarmTime).apply();
     }
 
-    public String getUnits() {
-        return sharedPreferences.getString(UNITS, "default value");
+    public String getAlarmTime() {
+        return sharedPreferences.getString(ALARM_TIME, "default value");
+    }
+
+    public void setNotifications(boolean notifications) {
+        sharedPreferences.edit().putBoolean(NOTIFICATIONS, notifications).apply();
+    }
+
+    public boolean getNotifications() {
+        return sharedPreferences.getBoolean(NOTIFICATIONS, false);
+    }
+
+    public void setActualTemp(String actualTemp) {
+        sharedPreferences.edit().putString(ACTUAL, actualTemp).apply();
+    }
+
+    public String getActualTemp() {
+        return sharedPreferences.getString(ACTUAL, "null");
+    }
+
+    public void setMaxTemp(String maxTemp) {
+        sharedPreferences.edit().putString(MAX, maxTemp).apply();
+    }
+
+    public String getMaxTemp() {
+        return sharedPreferences.getString(MAX, "null");
+    }
+
+    public void setUnits(boolean units) {
+        sharedPreferences.edit().putBoolean(UNITS, units).apply();
+    }
+
+    public boolean getUnits() {
+        return sharedPreferences.getBoolean(UNITS, false);
     }
 
     public void setUpdateRatio(int updateRatio) {

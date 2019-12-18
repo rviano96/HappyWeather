@@ -1,6 +1,8 @@
 package ar.iua.edu.viano.happyWeather.Activities;
 
 import android.Manifest;
+import android.app.AlarmManager;
+import android.app.PendingIntent;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -25,19 +27,16 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.MenuItem;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 
 import java.io.BufferedInputStream;
-import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.Reader;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -46,14 +45,14 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
-import java.util.concurrent.ExecutionException;
 
 import ar.iua.edu.viano.happyWeather.Constants.Constants;
-import ar.iua.edu.viano.happyWeather.CurrentWeatherService;
 import ar.iua.edu.viano.happyWeather.GPS;
-import ar.iua.edu.viano.happyWeather.Model.DTO.ForecastFromApi;
+import ar.iua.edu.viano.happyWeather.Helpers.ConvertUnits;
 import ar.iua.edu.viano.happyWeather.Model.DTO.WeatherFromApi;
+import ar.iua.edu.viano.happyWeather.Model.User;
 import ar.iua.edu.viano.happyWeather.Model.WeatherDetails;
+import ar.iua.edu.viano.happyWeather.Notifications.NotificationHandler;
 import ar.iua.edu.viano.happyWeather.Persistence.Data.Weather;
 import ar.iua.edu.viano.happyWeather.Persistence.Data.WeatherForecast;
 import ar.iua.edu.viano.happyWeather.Persistence.Database.DailyWeather.DailyWeatherRepository;
@@ -61,10 +60,10 @@ import ar.iua.edu.viano.happyWeather.Persistence.Database.Users.UserRepository;
 import ar.iua.edu.viano.happyWeather.Persistence.Database.WeatherForecast.WeatherForecastRepository;
 import ar.iua.edu.viano.happyWeather.Preferences.PreferencesUtils;
 import ar.iua.edu.viano.happyWeather.R;
+import ar.iua.edu.viano.happyWeather.Services.WeatherService;
 import ar.iua.edu.viano.happyWeather.UI.fragments.MapFragment;
 import ar.iua.edu.viano.happyWeather.UI.fragments.SettingsFragment;
 import ar.iua.edu.viano.happyWeather.UI.fragments.WeatherFragment;
-import ar.iua.edu.viano.happyWeather.Model.User;
 
 public class HomeActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, SettingsFragment.EditButtonListener,
         WeatherFragment.ReloadButtonListener {
@@ -78,7 +77,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
     NavigationView navigationView = null;
     Bundle bundle = null;
     Bitmap photo = null;
-    static final int REQUEST_TAKE_PHOTO = 0, REQUEST_SELECT_PICTURE = 1, REQUEST_CAMERA = 2;
+    static final int REQUEST_TAKE_PHOTO = 0, REQUEST_SELECT_PICTURE = 1, REQUEST_CAMERA = 2, NOTIFICATION_REQUEST_CODE = Constants.NOTIFICATION_REQUEST_CODE;
     String currentPhotoPath;
     private UserRepository userRepository;
     private double lat;
@@ -87,7 +86,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
     Location l;
     private WeatherForecastRepository weatherForecastRepository;
     private DailyWeatherRepository dailyWeatherRepository;
-
+    private ConvertUnits convertUnits = new ConvertUnits();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         preferencesUtils = new PreferencesUtils(this);
@@ -136,7 +135,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         if (actualFragment == null) {
             actualFragment = "MapFragment";
             getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
-                    new MapFragment()).commit();
+                    new MapFragment(), actualFragment).commit();
             navigationView.setCheckedItem(R.id.nav_home);
         }
 
@@ -209,7 +208,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
     //Navega al fragment que recibe como paremetro
     private void navigateToFragment(Fragment fragment) {
         getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
-                fragment).commit();
+                fragment, actualFragment).commit();
     }
 
 
@@ -282,6 +281,32 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
 
     }
 
+    @Override
+    public void activateAlarm(int hour, int minute) {
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(Calendar.HOUR_OF_DAY, hour);
+        calendar.set(Calendar.MINUTE, minute);
+        calendar.set(Calendar.SECOND, 0);
+        Intent intent = new Intent(getApplicationContext(), NotificationHandler.class);
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(getApplicationContext(),NOTIFICATION_REQUEST_CODE, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+        AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
+        //2do parametro establece cuando la alarma va a ser tirada
+        //3ro cada cuanto debe ser llamado. el intervalo.
+        alarmManager.setRepeating(AlarmManager.RTC_WAKEUP,calendar.getTimeInMillis(),AlarmManager.INTERVAL_DAY,pendingIntent);
+        //alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, SystemClock.elapsedRealtime() + 1000*60,1000*60,pendingIntent);
+        Toast.makeText(HomeActivity.this, "Start alarm at " +hour + ":" + minute, Toast.LENGTH_LONG).show();
+    }
+
+    @Override
+    public void deactivateAlarm(){
+        Intent intent = new Intent(getApplicationContext(), NotificationHandler.class);
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(getApplicationContext(), NOTIFICATION_REQUEST_CODE, intent, PendingIntent.FLAG_NO_CREATE);
+        AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
+        if(pendingIntent != null){
+            alarmManager.cancel(pendingIntent);
+            Log.d("Deactivating Alarm",pendingIntent.toString());
+        }
+    }
     //------------------------------SAVE DATA IN DATABASE-------------------------------------------
     private void saveData(List<WeatherFromApi> data) {
         WeatherFromApi dto = data.get(0);
@@ -297,7 +322,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
                     String.valueOf(dto.getMain().getPressure()), dto.getWind().getSpeed(),
                     String.valueOf(dto.getVisibility()));
             weather.add(new Weather(dto.getMain().getTempMax(), dto.getMain().getTempMin(), dto.getMain().getTemp(),
-                    name, new Date(dto.getDt() * 1000), 1, weatherDetails));
+                    name, new Date(dto.getDt() * 1000), data.get(i).getListWeather().get(0).getId(), weatherDetails));
         }
         int position = 0;
         // me fijo cuando el campo dateText es diferente,
@@ -313,7 +338,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
             //29.0+i,15-i,"Cordoba", setDOW(calendar.get(Calendar.DAY_OF_WEEK)), 1)
             calendar.setTime(new Date(data.get(i).getDt() * 1000));
             weatherForecast.add(new WeatherForecast(data.get(i).getMain().getTempMax(), data.get(i).getMain().getTempMin(),
-                    name, String.valueOf(calendar.get(Calendar.DAY_OF_WEEK)), 1));
+                    name, String.valueOf(calendar.get(Calendar.DAY_OF_WEEK)), data.get(i).getListWeather().get(0).getId()));
         }
         dailyWeatherRepository.delete();
         weatherForecastRepository.deleteWeatherForecast();
@@ -324,8 +349,9 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
             weatherForecastRepository.insert(wf);
         }
         calendar.setTime(new Date());
-        preferencesUtils.setLastUpdate(calendar.get(Calendar.HOUR_OF_DAY) + ":" +
-                calendar.get(Calendar.MINUTE));
+        preferencesUtils.setLastUpdate(new Date().getHours() + ":" + new Date().getMinutes());
+        preferencesUtils.setActualTemp(convertUnits.formatTemperature(weather.get(0).getActualTemp(), preferencesUtils.getUnits()));
+        preferencesUtils.setMaxTemp(convertUnits.formatTemperature(weather.get(0).getMaximum(), preferencesUtils.getUnits()));
 
     }
 
@@ -421,11 +447,10 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
             List<WeatherFromApi> list = new ArrayList<>();
             //strings 0 = latittud, strings 1 = longitud, strings 2 = units
             System.out.println("lat: " + lat + " lon: " + lon);
+
             String[] data = {"-31.41", "-64.18", "metric"};
             //list = new ArrayList<>();
-            new WeatherService().execute(data);
-
-
+            new GetWeatherFromService().execute(data);
         } else {
             android.app.AlertDialog.Builder builder = new android.app.AlertDialog.Builder(this);
             builder.setTitle("No Internet Connection");
@@ -434,6 +459,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
                     dialog.dismiss();
+
                 }
             });
             builder.show();
@@ -442,10 +468,10 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
     }
 
 
-    private InputStream retrieveStream(String[] position, String type, String units) throws IOException {
+    private InputStream retrieveStream(String[] position, String type) throws IOException {
         URL url = null;
         try {
-            url = new URL("http://api.openweathermap.org/data/2.5/" + type + "?lat=" + position[0] + "&lon=" + position[1] + "&units=" + units + "&APPID=" + Constants.UID);
+            url = new URL("http://api.openweathermap.org/data/2.5/" + type + "?lat=" + position[0] + "&lon=" + position[1]  + "&APPID=" + Constants.UID);
         } catch (MalformedURLException e) {
             e.printStackTrace();
         }
@@ -455,14 +481,14 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
     }
 
 
-    private void showData(String data) {
+   /* private void showData(String data) {
         System.out.println("data: " + data);
-    }
+    }*/
 
     private Gson gson;
 
-    public WeatherFromApi weatherFromApi(String[] position, String units) throws IOException {
-        InputStream source = retrieveStream(position, "weather", units);
+   /* public WeatherFromApi weatherFromApi(String[] position, String units) throws IOException {
+        InputStream source = retrieveStream(position, "weather");
         Reader reader = new InputStreamReader(source);
         GsonBuilder gsonBuilder = new GsonBuilder();
         gson = gsonBuilder.create();
@@ -470,16 +496,16 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
     }
 
     public ForecastFromApi forecastWeather(String[] position, String units) throws IOException {
-        InputStream source = retrieveStream(position, "forecast", units);
+        InputStream source = retrieveStream(position, "forecast");
         Reader reader = new InputStreamReader(source);
         GsonBuilder gsonBuilder = new GsonBuilder();
         gson = gsonBuilder.create();
         return gson.fromJson(reader, ForecastFromApi.class);
 
-    }
+    }*/
 
 
-    private class WeatherService extends AsyncTask<String, Void, List<WeatherFromApi>> {
+    public class GetWeatherFromService extends AsyncTask<String, Void, List<WeatherFromApi>> {
         private Gson gson;
         private Weather weather;
         private WeatherDetails weatherDetails;
@@ -491,11 +517,13 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
             try {
                 WeatherFromApi dto;
                 List<WeatherFromApi> dtoList = new ArrayList<>();
+                WeatherService weatherService = new WeatherService(getApplicationContext());
                 //strings 0 = latittud, strings 1 = longitud, strings 2 = units
                 String[] coords = {strings[0], strings[1]};
-                dto = weatherFromApi(coords, strings[2]);
+                dto = weatherService.weatherFromApi(coords, strings[2]);
                 dtoList.add(dto);
-                dtoList.addAll(forecastWeather(coords, strings[2]).getWeatherFromApiList());
+                dtoList.addAll(weatherService.forecastWeather(coords, strings[2]).getWeatherFromApiList());
+                saveData(dtoList);
                 return dtoList;
 
             } catch (IOException e) {
@@ -507,7 +535,12 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         @Override
         protected void onPostExecute(List<WeatherFromApi> weatherFromApis) {
             //super.onPostExecute(weatherFromApis);
-            saveData(weatherFromApis);
+            /*Fragment currentFragment = getSupportFragmentManager().findFragmentByTag("WeatherFragment");
+            getSupportFragmentManager().beginTransaction().detach(currentFragment).attach(currentFragment).commit();
+            Log.d("post execute", "detaching fragment");
+            /*fragmentTransaction.remove(currentFragment);
+            fragmentTransaction.attach(currentFragment);
+            fragmentTransaction.commit();*/
         }
 
 

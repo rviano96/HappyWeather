@@ -3,7 +3,7 @@ package ar.iua.edu.viano.happyWeather.Model;
 import android.arch.persistence.room.Ignore;
 import android.content.Context;
 
-import ar.iua.edu.viano.happyWeather.R;
+import ar.iua.edu.viano.happyWeather.Constants.Constants;
 
 public class WeatherDetails {
     private String humidity;
@@ -38,7 +38,11 @@ public class WeatherDetails {
     }
 
     public String getWind() {
-        return wind;
+        /*if(unit)
+            return useMetricUnits(wind);
+        else
+            return useImperialUnits(wind);*/
+        return  wind;
     }
 
     public void setWind(String wind) {
@@ -46,6 +50,10 @@ public class WeatherDetails {
     }
 
     public String getVisibility() {
+        /*if(unit)
+            return useMetricUnits(visibility);
+        else
+            return useImperialUnits(visibility);*/
         return visibility;
     }
 
@@ -63,5 +71,14 @@ public class WeatherDetails {
         this.pressure = pressure;
         this.wind = wind;
         this.visibility = visibility;
+    }
+    private String useMetricUnits(String data) {
+        double number = Double.parseDouble(data);
+        return String.valueOf(number * Constants.BASE_KM_PER_HOURS);
+    }
+
+    private String useImperialUnits(String data) {
+        double number = Double.parseDouble(data);
+        return String.valueOf(number * Constants.BASE_MILES_PER_HOURS);
     }
 }

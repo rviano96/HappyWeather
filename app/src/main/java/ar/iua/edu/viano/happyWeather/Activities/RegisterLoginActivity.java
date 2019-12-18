@@ -1,29 +1,25 @@
 package ar.iua.edu.viano.happyWeather.Activities;
 
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.graphics.PorterDuff;
+import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
-import android.util.Base64;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import java.io.UnsupportedEncodingException;
 import java.util.List;
 
 import ar.iua.edu.viano.happyWeather.Constants.Constants;
+import ar.iua.edu.viano.happyWeather.Model.User;
 import ar.iua.edu.viano.happyWeather.Persistence.Database.Users.UserRepository;
 import ar.iua.edu.viano.happyWeather.Preferences.PreferencesUtils;
-import ar.iua.edu.viano.happyWeather.UI.fragments.LoginFragment;
 import ar.iua.edu.viano.happyWeather.R;
+import ar.iua.edu.viano.happyWeather.UI.fragments.LoginFragment;
 import ar.iua.edu.viano.happyWeather.UI.fragments.RegisterFragment;
-import ar.iua.edu.viano.happyWeather.Model.User;
-
 public class RegisterLoginActivity extends AppCompatActivity implements LoginFragment.LoginFragmentListener, RegisterFragment.RegisterFragmentListener {
     private static final String EMAIL = "EMAIL";
     private static final String PASSWORD = "PASSWORD";

@@ -1,17 +1,8 @@
 package ar.iua.edu.viano.happyWeather.UI.fragments;
 
-import android.Manifest;
-import android.app.AlertDialog;
-import android.content.Context;
-import android.content.DialogInterface;
-import android.content.res.Resources;
-import android.location.Location;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
@@ -20,30 +11,20 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.GregorianCalendar;
 import java.util.List;
-import java.util.concurrent.ExecutionException;
 
-import ar.iua.edu.viano.happyWeather.CurrentWeatherService;
-
-import ar.iua.edu.viano.happyWeather.GPS;
-import ar.iua.edu.viano.happyWeather.Model.DTO.WeatherFromApi;
+import ar.iua.edu.viano.happyWeather.Helpers.ConvertUnits;
+import ar.iua.edu.viano.happyWeather.Helpers.SetWeatherStatus;
 import ar.iua.edu.viano.happyWeather.Persistence.Data.Weather;
 import ar.iua.edu.viano.happyWeather.Persistence.Data.WeatherForecast;
 import ar.iua.edu.viano.happyWeather.Persistence.Database.DailyWeather.DailyWeatherRepository;
 import ar.iua.edu.viano.happyWeather.Persistence.Database.WeatherForecast.WeatherForecastRepository;
 import ar.iua.edu.viano.happyWeather.Preferences.PreferencesUtils;
 import ar.iua.edu.viano.happyWeather.R;
-import ar.iua.edu.viano.happyWeather.UI.recyclerView.adapters.WeatherListAdapter;
-//import ar.iua.edu.viano.happyWeather.Model.Weather;
 import ar.iua.edu.viano.happyWeather.UI.recyclerView.adapters.WeatherForecastListAdapter;
-import ar.iua.edu.viano.happyWeather.Model.WeatherDetails;
+import ar.iua.edu.viano.happyWeather.UI.recyclerView.adapters.WeatherListAdapter;
 
 public class WeatherFragment extends Fragment {
     // recyclerView del pronostico
@@ -69,47 +50,47 @@ public class WeatherFragment extends Fragment {
     //temp
     private TextView temp;
     private TextView lastUpdate;
-    private List<WeatherForecast> weatherForecast = new ArrayList<>();
-    private List<Weather> weather = new ArrayList<>();
+    private ConvertUnits convertUnits = new ConvertUnits();
     // BDD
     private DailyWeatherRepository dailyWeatherRepository;
     private WeatherForecastRepository weatherForecastRepository;
     List<Weather> listWeather = new ArrayList<>();
     List<WeatherForecast> listWeatherForecast = new ArrayList<>();
-    List<WeatherForecast> weatherToday = new ArrayList<>();
-    //private List<WeatherDetails> weatherDetails = new ArrayList<>();
-    private WeatherDetails wd;
+    SetWeatherStatus setWeatherStatus;
 
-    Calendar calendario = new GregorianCalendar();
     private PreferencesUtils preferencesUtils;
     private ReloadButtonListener reloadButtonListener;
-
+    View retView;
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View retView = inflater.inflate(R.layout.fragment_weather, container, false);
+         retView = inflater.inflate(R.layout.fragment_weather, container, false);
         DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(getContext(), DividerItemDecoration.HORIZONTAL);
         dividerItemDecoration.setDrawable(getContext().getResources().getDrawable(R.drawable.line_divider));
         dailyWeatherRepository = new DailyWeatherRepository(getActivity().getApplication());
         weatherForecastRepository = new WeatherForecastRepository(getActivity().getApplication());
         reloadButtonListener = (ReloadButtonListener) getActivity();
-        //-------------------------------Obtiene los campos y llama a la api-------------------------------------------------------------
-
+        setWeatherStatus = new SetWeatherStatus(getContext());
+        //-------------------------------Obtiene los campos-------------------------------------------------------------
         location = retView.findViewById(R.id.location);
         actualWeather = retView.findViewById(R.id.actualWeather);
         temp = retView.findViewById(R.id.temp);
         lastUpdate = retView.findViewById(R.id.lastUpdate);
-        // initWeatherDetails();
         humidity = retView.findViewById(R.id.humidity);
         pressure = retView.findViewById(R.id.pressure);
         visibility = retView.findViewById(R.id.visibility);
         wind = retView.findViewById(R.id.wind);
         preferencesUtils = new PreferencesUtils(getActivity().getApplicationContext());
+
+        return retView;
+    }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        reloadButtonListener.refreshWeather();
         initAllWeather();
-        //if(listWeather.size() == 0 || listWeatherForecast.size() == 0 || weatherToday.size() == 0)
-        //reloadButtonListener.refreshWeather();
-        //initAllWeather();
-        //setActualWeather();
+        setActualWeather();
         setDetails();
         //--------------------------Recycler del pronostico --------------------------------------------------------------------
         recyclerViewForecast = retView.findViewById(R.id.recyclerViewWeatherForecast);
@@ -120,67 +101,48 @@ public class WeatherFragment extends Fragment {
         recyclerViewWeather = retView.findViewById(R.id.recyclerViewWeather);
         recyclerViewWeather.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false));
         recyclerViewWeather.setAdapter(new WeatherListAdapter(listWeather));
-        return retView;
-    }
-
-    @Override
-    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-
-        reloadButtonListener.refreshWeather();
-        initAllWeather();
     }
 
     private void setDetails() {
-        Weather w = listWeather.get(0);
-        humidity.setText(String.format(getResources().getString(R.string.humidity), w.getHumidity()));
-        pressure.setText(String.format(getResources().getString(R.string.pressure), w.getPressure()));
-        visibility.setText(String.format(getResources().getString(R.string.visibility), w.getVisibility()));
-        wind.setText(String.format(getResources().getString(R.string.wind), w.getWind()));
+        if (!isEmpty(listWeather)) {
+            Weather w = listWeather.get(0);
+            humidity.setText(String.format(getResources().getString(R.string.humidity), w.getHumidity()));
+            pressure.setText(String.format(getResources().getString(R.string.pressure), w.getPressure()));
+            visibility.setText(String.format(getResources().getString(R.string.visibility), convertUnits.formatVisibility(w.getVisibility(), preferencesUtils.getUnits()) ));
+            wind.setText(String.format(getResources().getString(R.string.wind), convertUnits.formatWind(w.getWind(), preferencesUtils.getUnits())));
+        }else{
+            initAllWeather();
+        }
+
     }
 
     private void setActualWeather() {
-        /*listWeather = dailyWeatherRepository.getAllHours();
-        listWeatherForecast = weatherForecastRepository.getAllDays();*/
-        for(int i = 0; i<listWeatherForecast.size() ;i ++){
-            listWeatherForecast.get(i).setDOW(setDOW( Integer.parseInt(listWeatherForecast.get(i).getDOW())));
+
+        for (int i = 0; i < listWeatherForecast.size(); i++) {
+            listWeatherForecast.get(i).setDOW(setDOW(Integer.parseInt(listWeatherForecast.get(i).getDOW())));
         }
-        location.setText(listWeather.get(0).getLocation());
-        actualWeather.setText(R.string.snowy);
-        temp.setText(listWeather.get(0).getActualTemp() + "°");
-        lastUpdate.setText("Last update: " + preferencesUtils.getLastUpdate());
-        WeatherForecast fw = new WeatherForecast();
-        fw.setDate(listWeather.get(0).getDate());
-        fw.setMaximum(listWeather.get(0).getMaximum());
-        fw.setMinimum(listWeather.get(0).getMinimum());
-        fw.setWeather(-1);
-        //weatherToday.add(fw);
+
+        if (!isEmpty(listWeather)) {
+            location.setText(listWeather.get(0).getLocation());
+            actualWeather.setText(setWeatherStatus.setStatus(String.valueOf(listWeather.get(0).getWeather())));
+            temp.setText(convertUnits.formatTemperature(listWeather.get(0).getActualTemp(),preferencesUtils.getUnits()));
+            lastUpdate.setText("Last update: " + preferencesUtils.getLastUpdate());
+            WeatherForecast fw = new WeatherForecast();
+            fw.setDate(listWeather.get(0).getDate());
+            fw.setMaximum(listWeather.get(0).getMaximum());
+            fw.setMinimum(listWeather.get(0).getMinimum());
+            fw.setWeather(-1);
+        }else{
+            initAllWeather();
+        }
+
     }
 
     private void initAllWeather() {
         listWeather = dailyWeatherRepository.getAllHours();
         listWeatherForecast = weatherForecastRepository.getAllDays();
-        setActualWeather();
     }
 
-    private void initWeather() {
-        //Simula tdo un dia
-        //initWeatherDetails();
-        for (int i = 0; i < 24; i++) {
-            wd.setHumidity("" + i);
-            weather.add(new Weather(i + 10.0, 10.0 - i, i, "Cordoba", new Date(new Date().getTime() + 3570947 * i), 3, wd));
-        }
-    }
-
-    private void initWeatherForecast() {
-        Calendar calendar = Calendar.getInstance();
-
-        for (int i = 0; i < 7; i++) {
-            // Simula una semana
-            calendar.setTime(new Date(new Date().getTime() + 78097230 * i));
-            weatherForecast.add(new WeatherForecast(29.0 + i, 15 - i, "Cordoba", setDOW(calendar.get(Calendar.DAY_OF_WEEK)), 1));
-        }
-    }
 
     private String setDOW(int DOW) {
         System.out.println("dow " + DOW);
@@ -204,18 +166,16 @@ public class WeatherFragment extends Fragment {
         }
     }
 
-    private void initWeatherDetails() {
-        //Humedad + riesgo de lluvia
-      /*  wd = new WeatherDetails(
-                getActivity().getApplicationContext(), "50", "30", "1024",
-                "15", "10", "15", "9");
-*/
+    private boolean isEmpty(List<?> list) {
+        return list == null || list.size() == 0;
     }
 
+    private boolean isEmpty(String string) {
+        return string == null || string.isEmpty();
+    }
 
     public interface ReloadButtonListener {
         void refreshWeather();
     }
-
 
 }

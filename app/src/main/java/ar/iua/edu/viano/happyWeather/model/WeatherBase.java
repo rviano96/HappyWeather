@@ -1,13 +1,9 @@
 package ar.iua.edu.viano.happyWeather.Model;
 
 import android.arch.persistence.room.Ignore;
-import android.content.Context;
-import android.content.res.Resources;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
-
-import ar.iua.edu.viano.happyWeather.R;
 
 public class WeatherBase {
 
@@ -17,6 +13,7 @@ public class WeatherBase {
     private String location;
     @Ignore
     private Date date;
+
 
     // private WeatherDetails weatherDetails;
     private int weather;
@@ -54,16 +51,16 @@ public class WeatherBase {
         this.weather = weather;
     }
 
-    public double getMaximum() {
+    public double getMaximum(){
         return maximum;
     }
+    public double getMinimum(){
+        return minimum;
+    }
+
 
     public void setMaximum(double maximum) {
         this.maximum = maximum;
-    }
-
-    public double getMinimum() {
-        return minimum;
     }
 
     public void setMinimum(double minimum) {
@@ -106,4 +103,6 @@ public class WeatherBase {
                 ", date=" + date +
                 '}';
     }
+
+
 }

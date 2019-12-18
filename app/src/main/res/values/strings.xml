@@ -20,6 +20,7 @@
     <string name="metric">Metric</string>
     <string name="standard">Standard</string>
     <string name="units">Units</string>
+    <string name="empty">Null</string>
     <!--DRAWER MENU-->
     <string name="itemHelpTitle">Something to say?</string>
     <string name="menuItemWeather">Weather</string>
@@ -34,9 +35,9 @@
     <string name="pressure">Pressure \n %1$s Hpa</string>
     <string name="riskOfRain">Risk Of Rain \n %1$s %%</string>
     <string name="rain">Rain \n %1$s cm</string>
-    <string name="apparentTemperature">Appar. Temp. \n %1$s °</string>
-    <string name="wind">Wind \n %1$s km/h</string>
-    <string name="visibility">Visibility \n %1$s km</string>
+    <string name="apparentTemperature">Appar. Temp. \n %1$s</string>
+    <string name="wind">Wind \n %1$s </string>
+    <string name="visibility">Visibility \n %1$s </string>
     <!--Email-->
     <string name="email_subject">Something went wrong</string>
     <string name="email_chooser">Send email using &#8230;</string>
@@ -50,9 +51,16 @@
     <string name="saturday">Saturday</string>
     <string name="sunday">Sunday</string>
     <!-- WEATHER -->
-    <string name="sunny">Sunny</string>
-    <string name="cloudy">Cloudy</string>
-    <string name="snowy">Snowy</string>
-    <string name="rainny">Rainny</string>
-    <string name="partially">Partially %1$s</string>
+    <string name="sunny">Clear</string>
+    <string name="drizzle">Drizzle</string>
+    <string name="cloudy">Clouds</string>
+    <string name="snowy">Snow</string>
+    <string name="rainny">Rain</string>
+    <string name="thunderstorm">Thunderstorm</string>
+    <!--NOTIFICATION-->
+    <string name="notification_message">Hi %1$s!.\n Now: %2$s, Max: %3$s</string>
+    <string name="notification_switch">Notifications</string>
+    <string name="facebook_app_id">2176817095957935</string>
+    <string name="fb_login_protocol_scheme">fb2176817095957935</string>
+
 </resources>
