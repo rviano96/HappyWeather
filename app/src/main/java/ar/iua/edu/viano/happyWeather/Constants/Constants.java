@@ -18,4 +18,5 @@ public final class Constants {
     public static final double BASE_MILES_PER_HOURS = 2.24;
     public static final int NOTIFICATION_REQUEST_CODE = 10;
     public static final double METER_TO_MILE = 0.000621371;
+    public static final int UPDATE_WEATHER_REQUEST_CODE = 11;
 }

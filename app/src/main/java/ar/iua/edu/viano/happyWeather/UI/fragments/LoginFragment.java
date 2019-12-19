@@ -66,12 +66,12 @@ public class LoginFragment extends Fragment {
             @Override
             public void onCancel() {
                 Log.d("login facebook", "cancel");
-
             }
 
             @Override
             public void onError(FacebookException error) {
                 Log.d("login facebook", "error");
+                Toast.makeText(getContext(), "Error", Toast.LENGTH_LONG).show();
 
             }
         });
@@ -90,14 +90,11 @@ public class LoginFragment extends Fragment {
         @Override
         protected void onCurrentAccessTokenChanged(AccessToken oldAccessToken, AccessToken currentAccessToken) {
             if(currentAccessToken == null){
-                preferencesUtils.setUserPicture("");
-                preferencesUtils.setUserName("");
-                preferencesUtils.setUserEmail("");
-                preferencesUtils.setUserIsLoggedIn(false);
-                preferencesUtils.setUserPicture("");
-                Toast.makeText(getContext(), "User Is logged out", Toast.LENGTH_LONG).show();
+                preferencesUtils.clearData();
+                //Toast.makeText(getContext(), "User Is logged out", Toast.LENGTH_LONG).show();
             }else{
                 loadUserProfile(currentAccessToken);
+                loginFragmentListener.navigateToMapFragment();
             }
         }
     };
@@ -138,6 +135,7 @@ public class LoginFragment extends Fragment {
 
     public interface LoginFragmentListener{
         void navigateToRegisterScreen();
+        void navigateToMapFragment();
         void doLogin(User user);
 
     }
@@ -150,6 +148,7 @@ public class LoginFragment extends Fragment {
             }
         });
     }
+
 
     private void doLogin(Button buttonLogin){
         buttonLogin.setOnClickListener(new View.OnClickListener() {

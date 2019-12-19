@@ -8,6 +8,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.location.Location;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
@@ -15,6 +16,7 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
+import android.os.SystemClock;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
@@ -29,18 +31,15 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
+import android.widget.ImageButton;
 import android.widget.Toast;
 
+import com.facebook.login.LoginManager;
 import com.google.gson.Gson;
 
-import java.io.BufferedInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
-import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -53,6 +52,7 @@ import ar.iua.edu.viano.happyWeather.Model.DTO.WeatherFromApi;
 import ar.iua.edu.viano.happyWeather.Model.User;
 import ar.iua.edu.viano.happyWeather.Model.WeatherDetails;
 import ar.iua.edu.viano.happyWeather.Notifications.NotificationHandler;
+import ar.iua.edu.viano.happyWeather.Notifications.UpdateWeatherHandler;
 import ar.iua.edu.viano.happyWeather.Persistence.Data.Weather;
 import ar.iua.edu.viano.happyWeather.Persistence.Data.WeatherForecast;
 import ar.iua.edu.viano.happyWeather.Persistence.Database.DailyWeather.DailyWeatherRepository;
@@ -77,16 +77,25 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
     NavigationView navigationView = null;
     Bundle bundle = null;
     Bitmap photo = null;
-    static final int REQUEST_TAKE_PHOTO = 0, REQUEST_SELECT_PICTURE = 1, REQUEST_CAMERA = 2, NOTIFICATION_REQUEST_CODE = Constants.NOTIFICATION_REQUEST_CODE;
+    static final int UPDATE_WEATHER_REQUEST_CODE = Constants.UPDATE_WEATHER_REQUEST_CODE, NOTIFICATION_REQUEST_CODE = Constants.NOTIFICATION_REQUEST_CODE;
     String currentPhotoPath;
     private UserRepository userRepository;
     private double lat;
     private double lon;
+    private static final int CAMERA_PERMISSION = 11;
+    private static final int WRITE_PERMISSION = 12;
+    private static final int CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE = 1888;
+    private static final int SELECTIMAGE_ACTIVITY_REQUEST_CODE = 2888;
+    private static final String CERO = "0";
+    private static final String DOS_PUNTOS = ":";
     GPS g;
     Location l;
     private WeatherForecastRepository weatherForecastRepository;
     private DailyWeatherRepository dailyWeatherRepository;
     private ConvertUnits convertUnits = new ConvertUnits();
+    private ImageButton image;
+    private String picName;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         preferencesUtils = new PreferencesUtils(this);
@@ -225,7 +234,8 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
 
     //Permite hacer logout. Por ahora solo setea a false la preferencia "is_logged_in"
     private void doLogout() {
-        preferencesUtils.setUserIsLoggedIn(false);
+        preferencesUtils.clearData();
+        LoginManager.getInstance().logOut();
         Intent intent = new Intent(this, RegisterLoginActivity.class);
         startActivity(intent);
         finish();
@@ -252,10 +262,15 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
 
     }
 
-    //Abre la camara para tomar una foto
     @Override
-    public Bitmap takePicture() {
-
+    public void takePicture(ImageButton imageBtn) {
+        PackageManager packageManager = getPackageManager();
+        image = imageBtn;
+        if (!packageManager.hasSystemFeature(PackageManager.FEATURE_CAMERA_ANY)) {
+            Toast.makeText(this, "El dispositivo no tiene una camara.", Toast.LENGTH_SHORT)
+                    .show();
+            return;
+        }
         final CharSequence[] options = {"Take Photo", "Choose from Library", "Cancel"};
         AlertDialog.Builder build = new AlertDialog.Builder(this);
         build.setTitle("Add Photo");
@@ -264,8 +279,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
             public void onClick(DialogInterface dialogInterface, int i) {
                 switch (i) {
                     case 0:
-                        cameraIntent();
-
+                        checkWritePermissions();
                         break;
                     case 1:
                         galleryIntent();
@@ -277,8 +291,80 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
             }
         });
         build.show();
-        return photo;
+    }
 
+    private void checkWritePermissions() {
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) !=
+                PackageManager.PERMISSION_GRANTED) {
+            // Permission is not granted
+            ActivityCompat.requestPermissions(this,
+                    new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
+                    PackageManager.GET_PERMISSIONS);
+        } else {
+            checkCameraPermissions();
+        }
+
+    }
+
+    private void checkCameraPermissions() {
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA) !=
+                PackageManager.PERMISSION_GRANTED) {
+            // Permission is not granted
+            ActivityCompat.requestPermissions(this,
+                    new String[]{Manifest.permission.CAMERA},
+                    PackageManager.GET_PERMISSIONS);
+        } else {
+            callCamera();
+        }
+
+    }
+
+    private void callCamera() {
+        picName = Environment.getExternalStorageDirectory() + "/test.jpg";
+        Uri output = Uri.fromFile(new File(picName));
+        Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        //intent.putExtra(MediaStore.EXTRA_OUTPUT, output);
+        startActivityForResult(intent, CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE);
+    }
+
+    private void galleryIntent() {
+        Intent intent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.INTERNAL_CONTENT_URI);
+        startActivityForResult(intent, SELECTIMAGE_ACTIVITY_REQUEST_CODE);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        String url = null;
+        if (resultCode == RESULT_OK) {// si saco una foto.
+            if (requestCode == CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE) {
+                Bitmap bmp = (Bitmap) data.getExtras().get("data");
+                ByteArrayOutputStream stream = new ByteArrayOutputStream();
+                bmp.compress(Bitmap.CompressFormat.PNG, 100, stream);
+                byte[] byteArray = stream.toByteArray();
+                // convert byte array to Bitmap
+                Bitmap bitmap = BitmapFactory.decodeByteArray(byteArray, 0,
+                        byteArray.length);
+                url = MediaStore.Images.Media.insertImage(getContentResolver(), bitmap, "picture", "description");
+                Log.d("uri", MediaStore.Images.Media.getContentUri("picture").toString());
+            }
+            if (requestCode == SELECTIMAGE_ACTIVITY_REQUEST_CODE) {
+                Log.d("data", String.valueOf(data.getData()));
+                url = String.valueOf(data.getData());
+            }
+            image = findViewById(R.id.picture);
+            if(url !=null){
+                try {
+                    image.setImageBitmap(MediaStore.Images.Media.getBitmap(getContentResolver(), Uri.parse(url)));
+                    preferencesUtils.setUserPictureLocale(url);
+
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }else{
+                Log.d("foto", "error cargando foto");
+            }
+
+        }
     }
 
     @Override
@@ -288,25 +374,44 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         calendar.set(Calendar.MINUTE, minute);
         calendar.set(Calendar.SECOND, 0);
         Intent intent = new Intent(getApplicationContext(), NotificationHandler.class);
-        PendingIntent pendingIntent = PendingIntent.getBroadcast(getApplicationContext(),NOTIFICATION_REQUEST_CODE, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+        intent.putExtra("type", "notification");
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(getApplicationContext(), NOTIFICATION_REQUEST_CODE, intent, PendingIntent.FLAG_UPDATE_CURRENT);
         AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
         //2do parametro establece cuando la alarma va a ser tirada
         //3ro cada cuanto debe ser llamado. el intervalo.
-        alarmManager.setRepeating(AlarmManager.RTC_WAKEUP,calendar.getTimeInMillis(),AlarmManager.INTERVAL_DAY,pendingIntent);
+        alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), AlarmManager.INTERVAL_DAY, pendingIntent);
         //alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, SystemClock.elapsedRealtime() + 1000*60,1000*60,pendingIntent);
-        Toast.makeText(HomeActivity.this, "Start alarm at " +hour + ":" + minute, Toast.LENGTH_LONG).show();
+        //Toast.makeText(HomeActivity.this, "Start alarm at " + hour + ":" + minute, Toast.LENGTH_LONG).show();
+        Log.d("Start alarm at", hour + ":" + minute);
     }
 
     @Override
-    public void deactivateAlarm(){
+    public void deactivateAlarm() {
         Intent intent = new Intent(getApplicationContext(), NotificationHandler.class);
         PendingIntent pendingIntent = PendingIntent.getBroadcast(getApplicationContext(), NOTIFICATION_REQUEST_CODE, intent, PendingIntent.FLAG_NO_CREATE);
         AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
-        if(pendingIntent != null){
+        if (pendingIntent != null) {
             alarmManager.cancel(pendingIntent);
-            Log.d("Deactivating Alarm",pendingIntent.toString());
+            Log.d("Deactivating Alarm", pendingIntent.toString());
         }
     }
+
+    @Override
+    public void updateWeather(int hour) {
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(Calendar.HOUR_OF_DAY, hour);
+        //calendar.set(Calendar.MINUTE, minute);
+        //calendar.set(Calendar.SECOND, 0);
+        Intent intent = new Intent(getApplicationContext(), UpdateWeatherHandler.class);
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(getApplicationContext(), UPDATE_WEATHER_REQUEST_CODE, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+        AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
+        //2do parametro establece cuando la alarma va a ser tirada
+        //3ro cada cuanto debe ser llamado. el intervalo.
+        //alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), AlarmManager.INTERVAL_DAY, pendingIntent);
+        alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, SystemClock.elapsedRealtime() + 1000 * 60, 1000 * 60 * 60 * hour, pendingIntent);
+        //Toast.makeText(HomeActivity.this, "Start alarm at " + hour + ":" + minute, Toast.LENGTH_LONG).show();
+    }
+
     //------------------------------SAVE DATA IN DATABASE-------------------------------------------
     private void saveData(List<WeatherFromApi> data) {
         WeatherFromApi dto = data.get(0);
@@ -349,12 +454,26 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
             weatherForecastRepository.insert(wf);
         }
         calendar.setTime(new Date());
-        preferencesUtils.setLastUpdate(new Date().getHours() + ":" + new Date().getMinutes());
+
+        preferencesUtils.setLastUpdate(formatLastUpdate(new Date().getHours(), new Date().getMinutes()));
         preferencesUtils.setActualTemp(convertUnits.formatTemperature(weather.get(0).getActualTemp(), preferencesUtils.getUnits()));
         preferencesUtils.setMaxTemp(convertUnits.formatTemperature(weather.get(0).getMaximum(), preferencesUtils.getUnits()));
 
     }
 
+    private String formatLastUpdate(int hourOfDay, int minute) {
+        String horaFormateada = (hourOfDay < 10) ? String.valueOf(CERO + hourOfDay) : String.valueOf(hourOfDay);
+        //Formateo el minuto obtenido: antepone el 0 si son menores de 10
+        String minutoFormateado = (minute < 10) ? String.valueOf(CERO + minute) : String.valueOf(minute);
+        //Obtengo el valor a.m. o p.m., dependiendo de la selección del usuario
+        String AM_PM;
+        if (hourOfDay < 12) {
+            AM_PM = "a.m.";
+        } else {
+            AM_PM = "p.m.";
+        }
+        return (horaFormateada + DOS_PUNTOS + minutoFormateado + " " + AM_PM);
+    }
 
     // Método que chequea si hay conexión a Internet.
     private boolean isNetworkConnected() {
@@ -363,70 +482,6 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         return networkInfo != null && networkInfo.isConnected();
     }
 
-    private void cameraIntent() {
-        Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-        startActivityForResult(intent, REQUEST_CAMERA);
-    }
-
-    private void galleryAddPic() {
-        Intent mediaScanIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
-        File photoFile = null;
-        try {
-            photoFile = createImageFile();
-        } catch (IOException ex) {
-            // Error occurred while creating the File
-            System.out.println("oops");
-        }
-        File f = new File(currentPhotoPath);
-        Uri contentUri = Uri.fromFile(f);
-        mediaScanIntent.setData(contentUri);
-        this.sendBroadcast(mediaScanIntent);
-    }
-
-    private void galleryIntent() {
-        Intent intent = new Intent();
-        intent.setType("image/*");
-        intent.setAction(Intent.ACTION_GET_CONTENT);
-        startActivityForResult(Intent.createChooser(intent, "Select File"), REQUEST_SELECT_PICTURE);
-    }
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == REQUEST_CAMERA && resultCode == RESULT_OK) {// si saco una foto.
-            Bundle extras = data.getExtras();
-            Bitmap imageBitmap = (Bitmap) extras.get("data");
-            galleryAddPic();
-            photo = imageBitmap;
-        } else {
-            if (requestCode == REQUEST_SELECT_PICTURE && resultCode == RESULT_OK) {// si la obtengo de la galeria.
-                Bundle extras = data.getExtras();
-                Uri uri = data.getData();// obtengo la uri de la foto.
-                System.out.println(uri);
-                try {
-                    photo = MediaStore.Images.Media.getBitmap(getContentResolver(), uri);
-                } catch (IOException e) {
-                    e.printStackTrace();
-
-                }
-            }
-        }
-    }
-
-    private File createImageFile() throws IOException {
-        // Create an image file name
-        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
-        String imageFileName = "JPEG_" + timeStamp + "_";
-        File storageDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
-        File image = File.createTempFile(
-                imageFileName,  /* prefix */
-                ".jpg",         /* suffix */
-                storageDir      /* directory */
-        );
-
-        // Save a file: path for use with ACTION_VIEW intents
-        preferencesUtils.setUserPicture(image.getAbsolutePath());
-        return image;
-    }
 
     private void initUser() {
         usuario = new User("Rodrigoviano@hotmail.com", "1234", "Rodrigo Viano");
@@ -443,12 +498,15 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
                 lat = l.getLatitude();
                 lon = l.getLongitude();
                 Toast.makeText(this, "LAT: " + lat + "LON: " + lon, Toast.LENGTH_LONG).show();
+            }else{
+                lat = -31.41;
+                lon = -64.18;
             }
             List<WeatherFromApi> list = new ArrayList<>();
             //strings 0 = latittud, strings 1 = longitud, strings 2 = units
             System.out.println("lat: " + lat + " lon: " + lon);
 
-            String[] data = {"-31.41", "-64.18", "metric"};
+            String[] data = {String.valueOf(lat), String.valueOf(lon), "metric"};
             //list = new ArrayList<>();
             new GetWeatherFromService().execute(data);
         } else {
@@ -466,43 +524,6 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         }
 
     }
-
-
-    private InputStream retrieveStream(String[] position, String type) throws IOException {
-        URL url = null;
-        try {
-            url = new URL("http://api.openweathermap.org/data/2.5/" + type + "?lat=" + position[0] + "&lon=" + position[1]  + "&APPID=" + Constants.UID);
-        } catch (MalformedURLException e) {
-            e.printStackTrace();
-        }
-        HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-        connection.setRequestMethod("GET");
-        return new BufferedInputStream(connection.getInputStream());
-    }
-
-
-   /* private void showData(String data) {
-        System.out.println("data: " + data);
-    }*/
-
-    private Gson gson;
-
-   /* public WeatherFromApi weatherFromApi(String[] position, String units) throws IOException {
-        InputStream source = retrieveStream(position, "weather");
-        Reader reader = new InputStreamReader(source);
-        GsonBuilder gsonBuilder = new GsonBuilder();
-        gson = gsonBuilder.create();
-        return gson.fromJson(reader, WeatherFromApi.class);
-    }
-
-    public ForecastFromApi forecastWeather(String[] position, String units) throws IOException {
-        InputStream source = retrieveStream(position, "forecast");
-        Reader reader = new InputStreamReader(source);
-        GsonBuilder gsonBuilder = new GsonBuilder();
-        gson = gsonBuilder.create();
-        return gson.fromJson(reader, ForecastFromApi.class);
-
-    }*/
 
 
     public class GetWeatherFromService extends AsyncTask<String, Void, List<WeatherFromApi>> {
@@ -534,13 +555,12 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
 
         @Override
         protected void onPostExecute(List<WeatherFromApi> weatherFromApis) {
-            //super.onPostExecute(weatherFromApis);
-            /*Fragment currentFragment = getSupportFragmentManager().findFragmentByTag("WeatherFragment");
-            getSupportFragmentManager().beginTransaction().detach(currentFragment).attach(currentFragment).commit();
-            Log.d("post execute", "detaching fragment");
-            /*fragmentTransaction.remove(currentFragment);
-            fragmentTransaction.attach(currentFragment);
-            fragmentTransaction.commit();*/
+
+            WeatherFragment weatherFrag = (WeatherFragment) getSupportFragmentManager()
+                    .findFragmentByTag("WeatherFragment");
+            if (weatherFrag != null) {
+                weatherFrag.refreshData();
+            }
         }
 
 

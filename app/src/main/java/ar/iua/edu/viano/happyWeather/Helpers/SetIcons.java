@@ -26,12 +26,13 @@ public class SetIcons {
                 return (R.drawable.ic_iconfinder_cloudy);
             default:
                 String tmp = status.substring(0, 2);
-                switch (tmp) {
+                switch (status) {
                     case "800":
                         return (R.drawable.ic_iconfinder_weather_01_1530392);
-                    case "80":
-                        return (R.drawable.ic_iconfinder_cloudy);
                     default:
+                        if (tmp.equals("80")) {
+                            return (R.drawable.ic_iconfinder_cloudy);
+                        }
                         return (R.drawable.ic_iconfinder_weather_01_1530392);
                 }
         }

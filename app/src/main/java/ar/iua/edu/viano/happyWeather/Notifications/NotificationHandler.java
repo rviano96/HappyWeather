@@ -6,6 +6,7 @@ import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.location.Location;
 import android.os.AsyncTask;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
@@ -15,6 +16,7 @@ import java.util.List;
 
 import ar.iua.edu.viano.happyWeather.Activities.HomeActivity;
 import ar.iua.edu.viano.happyWeather.Constants.Constants;
+import ar.iua.edu.viano.happyWeather.GPS;
 import ar.iua.edu.viano.happyWeather.Helpers.ConvertUnits;
 import ar.iua.edu.viano.happyWeather.Model.DTO.WeatherFromApi;
 import ar.iua.edu.viano.happyWeather.Persistence.Data.Weather;
@@ -28,14 +30,19 @@ public class NotificationHandler extends BroadcastReceiver {
     private ConvertUnits convertUnits = new ConvertUnits();
     private Context context;
     private PendingIntent pendingIntent;
+    private double lat;
+    private double lon;
+    GPS g;
+    Location l;
     void sendNotification() {
         preferencesUtils = new PreferencesUtils(context);
         NotificationCompat.Builder builder = new NotificationCompat.Builder(context, NOTIFICATION_CHANNEL_ID)
                 .setSmallIcon(R.mipmap.ic_launcher_happy_weather)
                 .setContentTitle(context.getString(R.string.app_name))
                 //String.format(getResources().getString(R.string.humidity), w.getHumidity())
-                .setContentText(String.format(context.getString(R.string.notification_message),preferencesUtils.getUserName(), preferencesUtils.getActualTemp(),
-                        preferencesUtils.getMaxTemp()))
+                .setContentText("")
+                .setStyle(new NotificationCompat.BigTextStyle().bigText(String.format(context.getString(R.string.notification_message),preferencesUtils.getUserName(), preferencesUtils.getActualTemp(),
+                        preferencesUtils.getMaxTemp())))
                 .setContentIntent(pendingIntent)
                 .setPriority(NotificationCompat.PRIORITY_DEFAULT);
 
@@ -51,6 +58,7 @@ public class NotificationHandler extends BroadcastReceiver {
         }
         Log.d("notification", String.format(context.getString(R.string.notification_message),preferencesUtils.getUserName(), preferencesUtils.getActualTemp(),
                 preferencesUtils.getMaxTemp()));
+        builder.setAutoCancel(true);
         notificationManager.notify(Constants.NOTIFICATION_REQUEST_CODE, builder.build());
 
     }
@@ -79,7 +87,17 @@ public class NotificationHandler extends BroadcastReceiver {
                 WeatherFromApi dto;
                 List<WeatherFromApi> dtoList = new ArrayList<>();
                 //strings 0 = latittud, strings 1 = longitud, strings 2 = units
-                String strings [] = {"-31.41", "-64.18", "metric"};
+                g = new GPS(context);
+                l = g.getLocation();
+                if (l != null) {
+                    lat = l.getLatitude();
+                    lon = l.getLongitude();
+                    Log.d("coord", "LAT: " + lat + "LON: " + lon);
+                }else{
+                    lat = -31.41;
+                    lon = -64.18;
+                }
+                String strings [] = {String.valueOf(lat), String.valueOf(lon), "metric"};
                 String[] coords = {strings[0], strings[1]};
                 dto = weatherService.weatherFromApi(coords, strings[2]);
                 dtoList.add(dto);

@@ -7,6 +7,7 @@ import android.support.v4.app.Fragment;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -29,12 +30,13 @@ import ar.iua.edu.viano.happyWeather.UI.recyclerView.adapters.WeatherListAdapter
 public class WeatherFragment extends Fragment {
     // recyclerView del pronostico
     RecyclerView recyclerViewForecast;
+    // adapter
+    RecyclerView.Adapter viewForecastAdapter;
     // RecyclerView del clima actual
     RecyclerView recyclerViewWeather;
-    // Recyclerview de los detalles
-    RecyclerView recyclerViewDetails;
-    // View para tem max y min
-    RecyclerView recyclerViewWeatherToday;
+    // adapter
+    RecyclerView.Adapter viewWeatherAdapter;
+
     //Location
     private TextView location;
     // Humidity
@@ -88,6 +90,7 @@ public class WeatherFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+
         reloadButtonListener.refreshWeather();
         initAllWeather();
         setActualWeather();
@@ -95,12 +98,16 @@ public class WeatherFragment extends Fragment {
         //--------------------------Recycler del pronostico --------------------------------------------------------------------
         recyclerViewForecast = retView.findViewById(R.id.recyclerViewWeatherForecast);
         recyclerViewForecast.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
-        recyclerViewForecast.setAdapter(new WeatherForecastListAdapter(listWeatherForecast));
+        viewForecastAdapter = new WeatherForecastListAdapter(listWeatherForecast);
+        recyclerViewForecast.setAdapter(viewForecastAdapter);
         recyclerViewForecast.addItemDecoration(new DividerItemDecoration(getContext(), DividerItemDecoration.VERTICAL));
         //--------------------------Recycler del clima 24hs--------------------------------------------------------------------
         recyclerViewWeather = retView.findViewById(R.id.recyclerViewWeather);
         recyclerViewWeather.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false));
-        recyclerViewWeather.setAdapter(new WeatherListAdapter(listWeather));
+        viewWeatherAdapter = new WeatherListAdapter(listWeather);
+        recyclerViewWeather.setAdapter(viewWeatherAdapter);
+
+
     }
 
     private void setDetails() {
@@ -118,20 +125,11 @@ public class WeatherFragment extends Fragment {
 
     private void setActualWeather() {
 
-        for (int i = 0; i < listWeatherForecast.size(); i++) {
-            listWeatherForecast.get(i).setDOW(setDOW(Integer.parseInt(listWeatherForecast.get(i).getDOW())));
-        }
-
         if (!isEmpty(listWeather)) {
             location.setText(listWeather.get(0).getLocation());
             actualWeather.setText(setWeatherStatus.setStatus(String.valueOf(listWeather.get(0).getWeather())));
             temp.setText(convertUnits.formatTemperature(listWeather.get(0).getActualTemp(),preferencesUtils.getUnits()));
             lastUpdate.setText("Last update: " + preferencesUtils.getLastUpdate());
-            WeatherForecast fw = new WeatherForecast();
-            fw.setDate(listWeather.get(0).getDate());
-            fw.setMaximum(listWeather.get(0).getMaximum());
-            fw.setMinimum(listWeather.get(0).getMinimum());
-            fw.setWeather(-1);
         }else{
             initAllWeather();
         }
@@ -144,27 +142,7 @@ public class WeatherFragment extends Fragment {
     }
 
 
-    private String setDOW(int DOW) {
-        System.out.println("dow " + DOW);
-        switch (DOW) {
-            case 1:
-                return getResources().getString(R.string.monday);
-            case 2:
-                return getResources().getString(R.string.tuesday);
-            case 3:
-                return getResources().getString(R.string.wednesday);
-            case 4:
-                return getResources().getString(R.string.thursday);
-            case 5:
-                return getResources().getString(R.string.friday);
-            case 6:
-                return getResources().getString(R.string.saturday);
-            case 7:
-                return getResources().getString(R.string.sunday);
-            default:
-                return "Error";
-        }
-    }
+
 
     private boolean isEmpty(List<?> list) {
         return list == null || list.size() == 0;
@@ -178,4 +156,15 @@ public class WeatherFragment extends Fragment {
         void refreshWeather();
     }
 
+    public void refreshData(){
+        initAllWeather();
+        setActualWeather();
+        viewForecastAdapter = new WeatherForecastListAdapter(listWeatherForecast);
+        recyclerViewForecast.setAdapter(viewForecastAdapter);
+        viewWeatherAdapter = new WeatherListAdapter(listWeather);
+        recyclerViewWeather.setAdapter(viewWeatherAdapter);
+        // viewWeatherAdapter.notifyDataSetChanged();
+        //viewForecastAdapter.notifyDataSetChanged();
+        Log.d("refresh", "refresh");
+    }
 }

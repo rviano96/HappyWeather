@@ -2,6 +2,7 @@ package ar.iua.edu.viano.happyWeather.UI.recyclerView.adapters;
 
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -46,22 +47,7 @@ public class WeatherListAdapter extends RecyclerView.Adapter<WeatherHolder> {
         weatherHolder.gettime().setText(data);
         weatherHolder.getactualTemp().setText(convertUnits.formatTemperature(weather.getActualTemp(), preferencesUtils.getUnits()));
         weatherHolder.geticonView().setBackgroundResource(setIcons.findIcon(String.valueOf(weather.getWeather())));
-        //sunny
-        /*if (weather.getWeather() == 0) {
-           // weatherHolder.geticonView().setBackgroundResource(setIcons.findIcon(weather.getWeather()));
-        } else {//cloudy
-            if (weather.getWeather() == 1) {
-                weatherHolder.geticonView().setBackgroundResource(R.drawable.ic_iconfinder_thunderstorm);
-            } else {//snowy
-                if (weather.getWeather() == 2) {
-                    weatherHolder.geticonView().setBackgroundResource(R.drawable.ic_iconfinder_snowflake_1651934);
-                } else {//rainny
-                    if (weather.getWeather() == 3) {
-                        weatherHolder.geticonView().setBackgroundResource(R.drawable.ic_iconfinder_rainny);
-                    }
-                }
-            }
-        }*/
+        Log.d("change", weather.toString());
 
     }
 

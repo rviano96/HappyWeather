@@ -1,7 +1,9 @@
 package ar.iua.edu.viano.happyWeather.UI.recyclerView.adapters;
 
+import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,6 +23,7 @@ public class WeatherForecastListAdapter extends RecyclerView.Adapter<WeatherFore
     private ConvertUnits convertUnits = new ConvertUnits();
     private PreferencesUtils preferencesUtils;
     private SetIcons setIcons;
+    private Context context;
     public WeatherForecastListAdapter(@NonNull List<WeatherForecast> weatherForecast) {
         this.weatherForecastList = weatherForecast;
     }
@@ -30,6 +33,7 @@ public class WeatherForecastListAdapter extends RecyclerView.Adapter<WeatherFore
     public WeatherForecastHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
         View row = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.weather_forecast_view, viewGroup, false);
         preferencesUtils = new PreferencesUtils(row.getContext());
+        context = row.getContext();
         setIcons = new SetIcons(row.getContext());
         return new WeatherForecastHolder(row);
     }
@@ -37,33 +41,36 @@ public class WeatherForecastListAdapter extends RecyclerView.Adapter<WeatherFore
     @Override
     public void onBindViewHolder(@NonNull WeatherForecastHolder weatherForecastHolder, int i) {
         WeatherForecast weather = weatherForecastList.get(i);
-        weatherForecastHolder.getDOW().setText(weather.getDOW());
+        weatherForecastHolder.getDOW().setText(setDOW(Integer.parseInt(weather.getDOW())));
         /*weatherForecastHolder.getmaxTemp().setText(weather.getMaximum() + "°");
         weatherForecastHolder.getminTemp().setText(weather.getMinimum() + "°");*/
         weatherForecastHolder.getmaxTemp().setText(convertUnits.formatTemperature(weather.getMaximum(),preferencesUtils.getUnits()));
         weatherForecastHolder.getminTemp().setText(convertUnits.formatTemperature(weather.getMinimum(),preferencesUtils.getUnits()));
         weatherForecastHolder.geticonView().setBackgroundResource(setIcons.findIcon(String.valueOf(weather.getWeather())));
-        //sunny
-        /*if (weather.getWeather() != -1) {
-            if (weather.getWeather() == 0) {
 
-            } else {//cloudy
-                if (weather.getWeather() == 1) {
-                    weatherForecastHolder.geticonView().setBackgroundResource(R.drawable.ic_iconfinder_thunderstorm);
-                } else {//snowy
-                    if (weather.getWeather() == 2) {
-                        weatherForecastHolder.geticonView().setBackgroundResource(R.drawable.ic_iconfinder_snowflake_1651934);
-                    } else {//rainny
-                        if (weather.getWeather() == 3) {
-                            weatherForecastHolder.geticonView().setBackgroundResource(R.drawable.ic_iconfinder_rainny);
-                        }
-                    }
-                }
-            }
-        }*/
     }
 
-
+    private String setDOW(int DOW) {
+        Log.d("dow", String.valueOf(DOW));
+        switch (DOW) {
+            case 1:
+                return context.getResources().getString(R.string.monday);
+            case 2:
+                return context.getResources().getString(R.string.tuesday);
+            case 3:
+                return context.getResources().getString(R.string.wednesday);
+            case 4:
+                return context.getResources().getString(R.string.thursday);
+            case 5:
+                return context.getResources().getString(R.string.friday);
+            case 6:
+                return context.getResources().getString(R.string.saturday);
+            case 7:
+                return context.getResources().getString(R.string.sunday);
+            default:
+                return "Error";
+        }
+    }
     @Override
     public int getItemCount() {
         return weatherForecastList.size();

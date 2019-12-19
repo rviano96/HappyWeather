@@ -19,7 +19,7 @@
     <string name="username">Username</string>
     <string name="cantLogin">Nombre de usuario o contraseña incorrectos</string>
     <string name="metric">Métrico</string>
-    <string name="standard">estándar</string>
+    <string name="standard">Estándar</string>
     <string name="units">Unidades</string>
 
     <!--DRAWER MENU-->

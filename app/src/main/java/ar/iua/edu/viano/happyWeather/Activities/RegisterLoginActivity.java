@@ -58,6 +58,13 @@ public class RegisterLoginActivity extends AppCompatActivity implements LoginFra
     }
 
     @Override
+    public void navigateToMapFragment() {
+        Intent intent = new Intent(this, HomeActivity.class);
+        startActivity(intent);
+        finish();
+    }
+
+    @Override
     public void navigateToLoginScreen() {
         fragmentTransaction = getSupportFragmentManager().beginTransaction();
         Fragment fragmentLogin = new LoginFragment();
@@ -74,6 +81,13 @@ public class RegisterLoginActivity extends AppCompatActivity implements LoginFra
             navigateToLoginScreen();
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        Fragment fragment = getSupportFragmentManager().findFragmentByTag("Login Fragment");
+        if(fragment != null)
+            fragment.onActivityResult(requestCode, resultCode, data);
+    }
     @Override
     public void doRegister(User user) {
        // byte[] data = user.getPsw().getBytes();

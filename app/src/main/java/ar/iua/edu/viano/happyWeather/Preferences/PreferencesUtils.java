@@ -18,14 +18,16 @@ public class PreferencesUtils {
     private static final String ACTUAL = "actualTemp";
     private static final String MAX = "maxTemp";
     private static final String UPDATE_RATIO = "update_ratio";
-
+    private static final String USER_PICTURE_LOCALE ="user_picture_locale";
     public PreferencesUtils(Context context) {
         this.context = context;
         sharedPreferences = this.context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
     }
 
+
     public void setUserName(String userName) {
         sharedPreferences.edit().putString(USER_NAME, userName).apply();
+
     }
 
     public void setLastUpdate(String lastUpdate) {
@@ -33,7 +35,7 @@ public class PreferencesUtils {
     }
 
     public String getLastUpdate() {
-        return sharedPreferences.getString(LAST_UPDATE, "default value");
+        return sharedPreferences.getString(LAST_UPDATE, "");
     }
 
     public void setAlarmTime(String alarmTime) {
@@ -41,7 +43,7 @@ public class PreferencesUtils {
     }
 
     public String getAlarmTime() {
-        return sharedPreferences.getString(ALARM_TIME, "default value");
+        return sharedPreferences.getString(ALARM_TIME, "");
     }
 
     public void setNotifications(boolean notifications) {
@@ -85,7 +87,7 @@ public class PreferencesUtils {
     }
 
     public String getUserName() {
-        return sharedPreferences.getString(USER_NAME, "default value");
+        return sharedPreferences.getString(USER_NAME, "");
     }
 
     public void setUserEmail(String userEmail) {
@@ -93,7 +95,7 @@ public class PreferencesUtils {
     }
 
     public String getUserEmail() {
-        return sharedPreferences.getString(USER_EMAIL, "default value");
+        return sharedPreferences.getString(USER_EMAIL, "");
     }
 
     public void setUserPicture(String userPicture) {
@@ -101,9 +103,16 @@ public class PreferencesUtils {
     }
 
     public String getUserPicture() {
-        return sharedPreferences.getString(USER_PICTURE, "default value");
+        return sharedPreferences.getString(USER_PICTURE, "");
     }
 
+    public void setUserPictureLocale(String userPicture) {
+        sharedPreferences.edit().putString(USER_PICTURE_LOCALE, userPicture).apply();
+    }
+
+    public String getUserPictureLocale() {
+        return sharedPreferences.getString(USER_PICTURE_LOCALE, "");
+    }
     public void setUserIsLoggedIn(boolean isLoggedIn) {
         sharedPreferences.edit().putBoolean(USER_IS_LOGGED_IN, isLoggedIn).apply();
     }
@@ -112,4 +121,17 @@ public class PreferencesUtils {
         return sharedPreferences.getBoolean(USER_IS_LOGGED_IN, false);
     }
 
+    public void clearData(){
+        setUserIsLoggedIn(false);
+        setUserEmail("");
+        setUserName("");
+        setUserPicture("");
+        setNotifications(false);
+        setAlarmTime("");
+        setMaxTemp("");
+        setLastUpdate("");
+        setUnits(false);
+        setUpdateRatio(1);
+        setUserPictureLocale("");
+    }
 }

@@ -27,14 +27,14 @@ public class SetWeatherStatus {
                 return context.getResources().getString(R.string.cloudy);
             default:
                 String tmp = status.substring(0, 2);
-                switch (tmp) {
+                switch (status) {
                     case "800":
-                        return context.getResources().getString(R.string.sunny);
-                    case "80":
-                        return context.getResources().getString(R.string.cloudy);
+                        return ( context.getResources().getString(R.string.sunny));
                     default:
-                        return context.getResources().getString(R.string.sunny);
-
+                        if (tmp.equals("80")) {
+                            return ( context.getResources().getString(R.string.cloudy));
+                        }
+                        return ( context.getResources().getString(R.string.sunny));
                 }
         }
     }

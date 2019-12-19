@@ -58,6 +58,7 @@
             android:name="com.facebook.sdk.ApplicationId"
             android:value="@string/facebook_app_id" />
         <receiver android:name=".Notifications.NotificationHandler" />
+        <receiver android:name=".Notifications.UpdateWeatherHandler" />
     </application>
 
 </manifest>
